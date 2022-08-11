@@ -1,0 +1,35 @@
+int display(int matr[][N], int n);
+int main(){
+    int matrix[N][N]= { {1,2,3,4,5},
+                        {6,7,8,9,10},
+                        {11,12,13,14,15},
+                        {16,17,18,19,20},
+                        {21,22,23,24,25}
+    };
+    int i, j;
+    for(i=0;i<N;i++){
+        for(j=0;j<N;j++){
+            printf("%d", matrix[i][j]);
+
+        }
+        printf("\n");
+    }
+    display(matrix,N);
+    return 0;
+}
+
+int display(int matr[][N], int n){
+    int i, j ,k;
+    for(k=0;k<n;k++){
+        for( i=0,j=k ; i<n, j>=0 ; i++,j--){
+            fprintf(stdout, "%d", matr[i][j]);
+        }
+    }
+    for(k=1;k<n;k++){
+        for( i=k,j=n-1 ; i<n, j>=0 ; i++,j--){
+            fprintf(stdout, "%d", matr[i][j]);
+        }
+    }
+    fprintf(stdout, "\n");
+    return 1;
+}
