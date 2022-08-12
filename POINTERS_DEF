@@ -1,0 +1,42 @@
+#include <stdio.h>
+
+//                                                  POINTER DEFINITION
+void swap (int *x, int *y);
+int main(){
+
+    int i = 10;
+    int j = 20;
+    int *p1;
+    int *p2;
+    p1 = &i;
+    p2 = &j;
+
+    if(*p1 == *p2){
+        printf("same value\n");
+    }else{
+        printf("not the same value\n");
+    }
+
+    if(p1==p2){
+        printf("same location\n");
+    }else{
+        printf("different location\n");
+    }
+
+    if(p1 > p2){
+        printf("p1 is after p2 in the memory\n");
+    }else{
+        printf("p1 is before p2 in the memory\n");
+    }
+    swap(p1,p2);
+    printf("%d %d", *p1,*p2);
+
+
+}
+void swap (int *x, int *y) {
+    int tmp;
+    tmp = *x;
+    *x = *y;
+    *y = tmp;
+    return;
+}
