@@ -1,7 +1,17 @@
 #include <stdio.h>
 
 //                                                  POINTER DEFINITION
+
+struct student {
+char s1[L], s2[L];
+int i;
+float f;
+};
+
+
 void swap (int *x, int *y);
+
+
 int main(){
 
     int i = 10;
@@ -30,9 +40,8 @@ int main(){
     }
     swap(p1,p2);
     printf("%d %d", *p1,*p2);
-
-
 }
+
 void swap (int *x, int *y) {
     int tmp;
     tmp = *x;
@@ -40,3 +49,16 @@ void swap (int *x, int *y) {
     *y = tmp;
     return;
 }
+
+void my_read (struct student *v) {
+char s1[DIM], s2[DIM];
+int i; float f;
+fprintf (stdout, “...: ");
+scanf ("%s%s%d%d", s1, s2, &i, &f);
+strcpy (v->s1, s1);
+strcpy (v->s2, s2);
+v->i = i;
+v->f = f;
+return;
+}
+
