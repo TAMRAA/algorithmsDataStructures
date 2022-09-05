@@ -1,0 +1,27 @@
+#include <stdio.h>
+#include <string.h>
+int charerase(char str[], int pos[]);
+int main() {
+    int n;
+    char str[] = {'T', 'h', 'i', 's', 'I', 's', 'A', 'S', 't', 'r', 'i', 'n', 'g'};
+    int pos[] = {7, 4, 2, 0, 11, -1};
+    n= charerase(str,pos);
+    printf("Number of characters deleted: %d\n",n);
+    printf("Your string: %s", str);
+    return 0;
+}
+int charerase(char str[], int pos[]) {
+    int i, j;
+    int n = strlen(str);
+    for (i = 0; pos[i] != -1; i++) {
+        for (j = pos[i]; j < n; j++) {
+            str[j] = str[j + 1];
+        }
+        for (j = i + 1; pos[j] != -1; j++) {
+            if (pos[j] > pos[i]) {
+                pos[j]--;
+            }
+        }
+    }
+    return n - strlen(str);
+}
