@@ -1,0 +1,37 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <string.h>
+void countAndPrint(char str[], int n);
+int vowel(char c);
+// < >
+int main(void){
+    int n;
+    char string[] = {'f','o','r','E','x','a','m','p','l','e'};
+    printf("insert length:\n");
+    scanf("%d", &n);
+    countAndPrint(string,n);
+    return 0;
+
+}
+void countAndPrint(char str[], int n){
+    int i, j, l;
+    int h;
+    l = strlen(str);
+    int counter;
+    for( i=0 ; i < l-n ; i++){
+        counter = 0;
+        for( j=i ; j < n+i ; j++){
+            counter += vowel(str[j]);
+        }
+        if(counter == 2){
+            for(h=i;h < n+i;h++){
+                printf("%c", str[h]);
+            }
+            printf("\n");
+        }
+    }
+}
+int vowel(char c){
+    c = toupper(c);
+    return(c=='A' || c=='E' || c=='I' || c=='O' || c=='U' || c=='Y');
+}
