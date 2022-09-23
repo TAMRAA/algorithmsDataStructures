@@ -47,3 +47,21 @@ void bubble_sort(int a[], int n){
         }
     }
 }
+
+// optimized bubble sort
+
+void optbubble_sort(int a[], int n){
+    int i , j , r = n-1;
+    int tmp, flag = 1;
+    for(i=0 ;i<r && flag; i++){
+        flag = 0;
+        for(j=0;j<r-i;j++){
+            if(a[j+1]<a[j]){
+                flag = 1;
+                tmp = a[j];
+                a[j] = a[j+1];
+                a[j+1] = tmp;
+            }
+        }
+    }
+}
