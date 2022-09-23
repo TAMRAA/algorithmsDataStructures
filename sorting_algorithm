@@ -31,3 +31,19 @@ void SelectionSort(int A[], int N) {
             A[min] = temp; } }
     return; 
 }
+
+// bubble sort 
+
+void bubble_sort(int a[], int n){
+    int i , j , r = n-1;
+    int tmp;
+    for(i=0 ;i<r; i++){
+        for(j=0;j<r-i;j++){
+            if(a[j+1]<a[j]){
+                tmp = a[j];
+                a[j] = a[j+1];
+                a[j+1] = tmp;
+            }
+        }
+    }
+}
