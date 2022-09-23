@@ -68,3 +68,25 @@ void optbubble_sort(int a[], int n){
     }
 }
 
+// counting sort 
+
+void CountingSort(int A[],int B[],int C[],int n,int k){
+    int i, l=0, r=n-1;
+    for (i = 0; i < k; i++){    // Initialization of C
+        C[i] = 0;
+    }
+    for (i = l; i <= r; i++){  // Simple occurrences
+        C[A[i]]++;
+    }
+
+    for (i = 1; i < k; i++){  // Multiple occurrences
+        C[i] += C[i-1];
+    }
+    for (i = r; i >= l; i--){  // Correct item positioning
+        B[C[A[i]]-1] = A[i];
+        C[A[i]]--;
+    }
+    for (i = l; i <= r; i++){  // Copy of result
+        A[i] = B[i];
+    }
+}
