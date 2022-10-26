@@ -1,6 +1,8 @@
 #include "stdio.h"
 #include "stdlib.h"
 
+// Dynamic array 1D
+
 int main(void){
     int n , *v;
     int i;
@@ -20,4 +22,13 @@ int main(void){
 
     }
     free(v);
+}
+
+// Dynamic matrix 2D
+
+int *array_create (int n) {
+int *ptr;
+ptr = (int *) malloc (n * sizeof (int));
+if (ptr == NULL) { ... }
+return ptr;
 }
