@@ -1,0 +1,120 @@
+#include "stdio.h"
+#include "stdlib.h"
+#include "string.h"
+#define MAX_ID 6
+#define MAX_NAME 21
+// > <
+// structure declaration
+typedef struct{
+    char id[MAX_ID];
+    char surname[MAX_NAME];
+    char name[MAX_NAME];
+    int total_amount;
+    int num_donations;
+}donor_t;
+
+// function prototypes
+
+donor_t *donor_read (int *num_ptr);
+void donation_read (donor_t *donors, int n);
+int id_search (donor_t *donors, char id[MAX_ID+1], int n);
+void result_display (donor_t *donors, int n);
+
+// main function
+int main(void){
+    donor_t *donors;
+    int n;
+
+    donors = donor_read(&n);
+    donation_read(donors,n);
+    result_display(donors,n);
+
+    free(donors);
+    return EXIT_SUCCESS;
+}
+donor_t *donor_read (int *num_ptr){
+    char id[MAX_ID], surname[MAX_NAME], name[MAX_NAME];
+    donor_t *donors;
+    int i, n;
+    FILE *fp;
+    fprintf(stdout,"Donors file name:\n");
+    scanf("%s", name);
+    fp = fopen(name,"r");
+    if(fp==NULL){
+        fprintf(stderr,"File open error (file = %s) ", name);
+        exit(EXIT_FAILURE);
+    }
+    n = 0;
+    while(fscanf(fp,"%s %*s %s %s", id, surname,name)!=EOF){
+        n++;
+    }
+    fclose(fp);
+
+    // allocate the dynamic array
+    donors = (donor_t *) malloc(n *sizeof (donor_t));
+    if(donors==NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    // Parse the file contents
+
+    fp = fopen(name,"r");
+    if(fp==NULL){
+        fprintf(stderr,"File open error (file = %s) ", name);
+        exit(EXIT_FAILURE);
+    }
+    for(i=0;i<n;i++){
+        fscanf(fp,"%s %*s %s %s", id, surname,name);
+        strcpy(donors[i].id, id);
+        strcpy(donors[i].name,name);
+        strcpy(donors[i].surname, surname);
+        donors[i].total_amount = 0;
+        donors[i].num_donations = 0;
+    }
+    fclose(fp);
+    *num_ptr = n;
+    return donors;
+}
+// parse the donation file, update the data structure
+void donation_read (donor_t *donors, int n){
+    char name[MAX_NAME], id[MAX_ID];
+    int i, amount;
+    FILE *fp;
+    fprintf(stdout,"Donations file name:\n");
+    scanf("%s", name);
+    fp = fopen(name,"r");
+    if(fp==NULL) {
+        fprintf(stderr, "File open error (file = %s) ", name);
+        exit(EXIT_FAILURE);
+    }
+    while(fscanf(fp,"%s %d", id, &amount)!=EOF){
+        // update the donation amount
+        i = id_search(donors,id,n);
+        if(i>=0){
+            donors[i].total_amount += amount;
+            donors[i].num_donations ++;
+        }
+    }
+    fclose(fp);
+    return;
+}
+
+int id_search (donor_t *donors, char id[MAX_ID+1], int n){
+    int i;
+    for(i=0; i<n ; i++){
+        if(strcmp(donors[i].id,id) == 0){
+            return i;
+        }
+    }
+    return -1;
+}
+void result_display (donor_t *donors, int n){
+    int i;
+    for(i=0;i<n;i++){
+        fprintf(stdout,"%s %s", donors[i].id, donors[i].name);
+        fprintf(stdout,"%s: %d", donors[i].surname, donors[i].num_donations);
+        fprintf(stdout,"donation(s): %d cc", donors[i].total_amount);
+    }
+    return;
+}
