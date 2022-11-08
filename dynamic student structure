@@ -1,0 +1,40 @@
+#include "stdio.h"
+#include "string.h"
+#include "stdlib.h"
+#define N 20
+struct student{
+    char *first_name, *last_name;
+    int age;
+    float avg;
+}student_t;
+// > <
+int main(void){
+    int n,i;
+    struct student *v;
+    char first_name[N], last_name[N];
+    int age;
+    float avg;
+    fprintf(stdout,"How many students:\n");
+    scanf("%d", &n);
+    v = (struct student *) malloc(n*sizeof (struct student));
+    if(v==NULL){
+        fprintf(stderr,"memory allocation failed");
+        exit(1);
+    }
+    fprintf(stdout,"\tname surname age average\n");
+    for(i=0;i<n;i++){
+        fprintf(stdout,"(%d):",i+1);
+        scanf("%s %s %d %f",first_name,last_name, &age, &avg);
+        v[i].first_name = strdup(first_name);
+        v[i].last_name = strdup(last_name);
+        v[i].age = age;
+        v[i].avg = avg;
+    }
+    // display result
+    for(i=0;i<n;i++){
+        fprintf(stdout,"student no(%d): %s %s %d %.2f\n",(i+1), v[i].first_name, v[i].last_name,v[i].age,v[i].avg);
+    }
+    free(v);
+    return 0;
+
+}
