@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Dynamic memory allocation
+
+#define N 20
+typedef struct{
+    char *first_name, *last_name;
+    int age;
+    int avg;
+}student_t;
+
+student_t *create_structure(int n);
+int *array_create(int n);
+int main(void){
+
+
+}
+
+// dynamic structure
+
+student_t *create_structure(int n){
+    student_t *v;
+    char firstname[N], lastname[N];
+    int age, average;
+    int i;
+
+    v = (student_t *) malloc(sizeof (student_t));
+    if(v==NULL){
+        fprintf(stderr,"memory allocation failed");
+        exit(1);
+    }
+    printf("name surname age average\n");
+    for(i=0;i<n;i++){
+        scanf("%s %s %d %d", firstname,lastname,&age,&average);
+        v[i].first_name = strdup(firstname);
+        v[i].last_name = strdup(lastname);
+        v[i].age = age;
+        v[i].avg = average;
+    }
+    if (i == n-1){
+        printf("data stored successfully");
+    }
+    for(i=0;i<n;i++){
+        fprintf(stdout,"%s %s %d %d\n",v[i].first_name,v[i].last_name,v[i].age, v[i].avg);
+    }
+    return v;
+}
+
+// Dynamic array
+
+int *array_create(int n){
+    int *ptr;
+    ptr = (int *) malloc (n*sizeof (int));
+    if(ptr==NULL){
+        fprintf(stderr,"memory allocation failed");
+        exit(1);
+    }
+    return ptr;
+}
