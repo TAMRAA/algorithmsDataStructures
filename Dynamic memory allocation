@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Dynamic memory allocation
+
+#define N 20
+typedef struct{
+    char *first_name, *last_name;
+    int age;
+    int avg;
+}student_t;
+char **matrix_create (int r, int c);
+student_t *create_structure(int n);
+int *array_create(int n);
+char *free2d (char **m, int r);
+int main(void){
+    int row, column;
+    char **matrix;
+    printf("insert row and column respectively:\n");
+    scanf("%d %d", &row, &column);
+    matrix = matrix_create(row,column);
+    free2d(matrix,row);
+    return EXIT_SUCCESS;
+}
+
+// dynamic structure
+
+student_t *create_structure(int n){
+    student_t *v;
+    char firstname[N], lastname[N];
+    int age, average;
+    int i;
+
+    v = (student_t *) malloc(sizeof (student_t));
+    if(v==NULL){
+        fprintf(stderr,"memory allocation failed");
+        exit(1);
+    }
+    printf("name surname age average\n");
+    for(i=0;i<n;i++){
+        scanf("%s %s %d %d", firstname,lastname,&age,&average);
+        v[i].first_name = strdup(firstname);
+        v[i].last_name = strdup(lastname);
+        v[i].age = age;
+        v[i].avg = average;
+    }
+    if (i == n-1){
+        printf("data stored successfully");
+    }
+    for(i=0;i<n;i++){
+        fprintf(stdout,"%s %s %d %d\n",v[i].first_name,v[i].last_name,v[i].age, v[i].avg);
+    }
+    return v;
+}
+
+// Dynamic array
+
+int *array_create(int n){
+    int *ptr;
+    ptr = (int *) malloc (n*sizeof (int));
+    if(ptr==NULL){
+        fprintf(stderr,"memory allocation failed");
+        exit(1);
+    }
+    return ptr;
+}
+
+// Dynamic matrix
+
+char **matrix_create (int r, int c){
+    int i;
+    char str[N], **mat;
+    mat = (char **) malloc (r * sizeof (char *));
+    if(mat == NULL){
+        fprintf(stderr, "memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    for(i=0;i<r;i++){
+        printf("insert string (%d):\n", i+1);
+        scanf("%s",str);
+        mat[i] = (char *)malloc(c*sizeof (char));
+        if(mat[i]==NULL){
+            fprintf(stderr,"memory allocation failed");
+            exit(EXIT_FAILURE);
+        }
+    }
+    // check result
+    for(i=0;i<r;i++){
+        printf("%s", mat[i]);
+    }
+    return mat;
+}
+
+// free dynamic matrix
+
+char *free2d (char **m, int r){
+    int i;
+    for(i=0;i<r;i++){
+        free(m[i]);
+    }
+    free(m);
+    return NULL;
+}
