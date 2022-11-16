@@ -1,0 +1,26 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// single linked list
+typedef struct{
+    int data;
+    struct node *link;
+}node_t;
+
+int main(void){
+    node_t *head;
+    head = (node_t *) malloc (sizeof (node_t));
+
+    if(head==NULL){
+        fprintf(stderr,"memory allocation error");
+        exit(EXIT_FAILURE);
+    }
+
+    head->data = 45;
+    head->link = NULL;
+
+    fprintf(stdout,"%d", head->data);
+    return (EXIT_SUCCESS);
+
+}
