@@ -3,13 +3,21 @@
 #include <string.h>
 
 
-// single linked list
+// single linked list declaration 
 typedef struct node{
     int data;
     struct node *link;
 }node;
+
+// function prototypes
+
 void count_nodes(struct node *head);
+void print_data(struct node *head);
+void add_at_end(struct node *head, int data);
+
+
 int main(void){
+    int n;
     node *head = malloc(sizeof (node));
     if(head == NULL){
         fprintf(stderr,"memory allocation failed");
@@ -34,9 +42,12 @@ int main(void){
     }
     current->data = 130;
     current->link = NULL;
-
+    printf("insert data:\n");
+    scanf("%d", &n);
     head->link->link = current;
+    add_at_end(head, n);
     count_nodes(head);
+    print_data(head);
     return EXIT_SUCCESS;
 }
 void count_nodes(struct node *head){
@@ -50,6 +61,29 @@ void count_nodes(struct node *head){
         count++;
         ptr = ptr->link;
     }
-    printf("number of nodes: %d", count);
+    printf("number of nodes: %d\n", count);
     return;
+}
+void print_data(struct node *head){
+    int i = 1;
+    if(head==NULL){
+        printf("linked list is empty\n");
+    }
+    struct node *ptr = head;
+    while (ptr!=NULL){
+        printf("data (%d) %d\n",i, ptr->data);
+        i++;
+        ptr = ptr->link;
+    }
+}
+void add_at_end(struct node *head, int data){
+    struct node *ptr, *tmp;
+    ptr = head;
+    tmp = (struct node *) malloc (sizeof (node));
+    tmp->data = data;
+    tmp->link = NULL;
+    while(ptr->link != NULL){
+        ptr = ptr->link;
+    }
+    ptr->link = tmp;
 }
