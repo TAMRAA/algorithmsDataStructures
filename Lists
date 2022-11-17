@@ -2,32 +2,30 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-// single linked list declaration 
 typedef struct node{
     int data;
     struct node *link;
 }node;
 
-// function prototypes
+// function prototype 1) print 2) count nodes 3) add node at last
 
-void count_nodes(struct node *head);
-void print_data(struct node *head);
-void add_at_end(struct node *head, int data);
+void count_node (struct node *head);
+void print_data (struct node *head);
+void add_at_end (struct node *head, int data);
 
 
 int main(void){
     int n;
-    node *head = malloc(sizeof (node));
-    if(head == NULL){
+    struct node *head = malloc(sizeof (node));
+    if(head ==NULL){
         fprintf(stderr,"memory allocation failed");
         exit(EXIT_FAILURE);
     }
     head->data = 100;
     head->link = NULL;
 
-    node *current = malloc(sizeof (node));
-    if(current == NULL){
+    struct node *current = malloc(sizeof(node));
+    if(current ==NULL){
         fprintf(stderr,"memory allocation failed");
         exit(EXIT_FAILURE);
     }
@@ -35,25 +33,29 @@ int main(void){
     current->link = NULL;
     head->link = current;
 
-    current = malloc(sizeof (node));
-    if(current == NULL){
+    current = (struct node *) malloc (sizeof(node));
+    if(current ==NULL){
         fprintf(stderr,"memory allocation failed");
         exit(EXIT_FAILURE);
     }
-    current->data = 130;
+    current->data = 120;
     current->link = NULL;
-    printf("insert data:\n");
-    scanf("%d", &n);
     head->link->link = current;
-    add_at_end(head, n);
-    count_nodes(head);
+
+    fprintf(stdout,"insert data to store:\n");
+    scanf("%d", &n);
+
+    add_at_end(head,n);
+    count_node(head);
     print_data(head);
-    return EXIT_SUCCESS;
+
+    return (EXIT_SUCCESS);
 }
-void count_nodes(struct node *head){
+
+void count_node (struct node *head){
     int count = 0;
-    if(head == NULL){
-        printf("0 nodes");
+    if(head ==NULL){
+        fprintf(stdout,"0 nodes");
     }
     struct node *ptr = NULL;
     ptr = head;
@@ -61,29 +63,34 @@ void count_nodes(struct node *head){
         count++;
         ptr = ptr->link;
     }
-    printf("number of nodes: %d\n", count);
+    fprintf(stdout,"num of nodes: %d\n",count);
     return;
 }
-void print_data(struct node *head){
+
+void print_data (struct node *head){
     int i = 1;
     if(head==NULL){
-        printf("linked list is empty\n");
+        fprintf(stdout,"list is empty");
     }
-    struct node *ptr = head;
-    while (ptr!=NULL){
-        printf("data (%d) %d\n",i, ptr->data);
+    struct node *ptr = NULL;
+    ptr = head;
+    while (ptr != NULL){
+        fprintf(stdout,"data(%d): %d\n",i ,ptr->data);
         i++;
         ptr = ptr->link;
     }
+    return;
 }
-void add_at_end(struct node *head, int data){
+
+void add_at_end (struct node *head, int data){
     struct node *ptr, *tmp;
     ptr = head;
-    tmp = (struct node *) malloc (sizeof (node));
+    tmp = (struct node *) malloc(sizeof (node));
     tmp->data = data;
     tmp->link = NULL;
-    while(ptr->link != NULL){
+    while(ptr->link!=NULL){
         ptr = ptr->link;
     }
     ptr->link = tmp;
+    return;
 }
