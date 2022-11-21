@@ -10,7 +10,7 @@ typedef struct node{
 void count_node (struct node *head);
 void print_data (struct node *head);
 void add_at_end (struct node *head, int data);
-
+void dispose_list(struct node *head);
 
 int main(void){
     int n;
@@ -44,9 +44,9 @@ int main(void){
     scanf("%d", &n);
 
     add_at_end(head,n);
-    count_node(head);
     print_data(head);
-
+    dispose_list(head);
+    count_node(head);
     return (EXIT_SUCCESS);
 }
 
@@ -90,5 +90,18 @@ void add_at_end (struct node *head, int data){
         ptr = ptr->link;
     }
     ptr->link = tmp;
+    return;
+}
+void dispose_list(struct node *head){
+    node *ptr = malloc(sizeof (node));
+    if ( ptr == NULL){
+        fprintf(stderr,"memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    while (head!= NULL){
+        ptr = head;
+        head = head->link;
+        free(ptr);
+    }
     return;
 }
