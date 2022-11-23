@@ -11,10 +11,12 @@ void add_at_end(struct node *head, int value);
 void print_data(struct node *head);
 void count_nodes(struct node *head);
 void add_beg(struct node **head , int value);
+void add_certain_pos(struct node *head, int value, int pos);
 
 // main function
 int main(void){
-    int n, n1;
+    int n, n1, n2;
+    int position;
     struct node *head;
     head = (struct node *) malloc (sizeof (node));
     if(head==NULL){
@@ -43,81 +45,98 @@ int main(void){
     head->link->link = current;
     fprintf(stdout,"insert a data to store in the beginning of the linked list:\n");
     scanf("%d", &n);
+    fprintf(stdout,"insert node (value and position) respectively:\n");
+    scanf("%d %d", &n1, &position);
     fprintf(stdout,"insert a data to store at the end of the linked list:\n");
-    scanf("%d", &n1);
+    scanf("%d", &n2);
 
     // function calls
 
     add_beg(&head,n);
-    add_at_end(head,n1);
+    add_certain_pos(head, n1,position);
+    add_at_end(head,n2);
     print_data(head);
     count_nodes(head);
     return (EXIT_SUCCESS);
 }
 
-
-// **head -> to return a pointer to the head of the upgraded linked list
-void add_beg(struct node **head , int value){
-    struct node *ptr = (struct node *) malloc (sizeof(node));
-    if(ptr ==NULL){
-        fprintf(stdout,"memory allocation failed");
+void add_beg(struct node **head, int value){
+    struct node *ptr = (struct node *) malloc(sizeof (node));
+    if(ptr == NULL){
+        fprintf(stdout,"memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
+
     ptr->data = value;
     ptr->link = NULL;
 
-    // link the first element to the second element
     ptr->link = *head;
-
-    // shift the head to the beginning
     *head = ptr;
 
 }
+void add_certain_pos(struct node *head, int value, int pos){
+    struct node *ptr, *ptr2;
 
+    // the node to be inserted
+    ptr2 = malloc(sizeof (node));
+    ptr2->data = value;
+    ptr2->link = NULL;
 
-
-void add_at_end(struct node *head, int value){
-    struct node *ptr, *tmp;
+    // traversing to the current position
     ptr = head;
-    tmp = (struct node *)malloc(sizeof (node));
-    if(tmp == NULL){
-        fprintf(stderr,"memory allocation failed");
+    pos--;
+
+    while (pos!=1){
+        ptr = ptr->link;
+        pos--;
+    }
+
+    // changing the links
+    ptr2->link = ptr->link;
+    ptr->link = ptr2;
+
+}
+
+void add_at_end (struct node *head, int value){
+    struct node *ptr = (struct node *) malloc(sizeof (node)), *tmp;
+    if(ptr == NULL){
+        fprintf(stdout,"memory allocation failed\n");
         exit(EXIT_FAILURE);
     }
+    tmp = (struct node *) malloc(sizeof (node));
     tmp->data = value;
     tmp->link = NULL;
-
+    ptr = head;
     while (ptr->link!=NULL){
         ptr = ptr->link;
     }
     ptr->link = tmp;
-    fprintf(stdout,"a node has been added at the end of the list successfully!!\n");
-    return;
-}
 
+}
 void print_data(struct node *head){
     struct node *ptr;
     int i = 1;
     ptr = head;
-    while (ptr!=NULL){
-        fprintf(stdout,"node (%d): %d\n", i, ptr->data);
-        i++;
-        ptr = ptr->link;
-    }
-    return;
-}
-
-void count_nodes(struct node *head){
-    struct node *ptr = head;
-    int count = 0;
-    if(head == NULL){
-        fprintf(stdout,"the list is empty");
-        exit(EXIT_FAILURE);
-    }
     while(ptr!=NULL){
+        fprintf(stdout,"node(%d): %d\n", i, ptr->data);
+        ptr = ptr->link;
+        i++;
+    }
+
+}
+void count_nodes(struct node *head) {
+    struct node *ptr;
+    int count = 0;
+    if (head == NULL) {
+        fprintf(stdout, "the list is empty\n");
+    }
+    ptr = head;
+    while (ptr != NULL) {
         count++;
         ptr = ptr->link;
     }
-    fprintf(stdout,"number of nodes: %d", count);
-    return ;
+    if (count != 0) {
+        fprintf(stdout, "num of nodes: %d\n", count);
+    }
+
 }
