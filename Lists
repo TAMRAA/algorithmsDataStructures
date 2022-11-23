@@ -1,107 +1,123 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 typedef struct node{
     int data;
     struct node *link;
 }node;
 
-void count_node (struct node *head);
-void print_data (struct node *head);
-void add_at_end (struct node *head, int data);
-void dispose_list(struct node *head);
+// function prototypes
+void add_at_end(struct node *head, int value);
+void print_data(struct node *head);
+void count_nodes(struct node *head);
+void add_beg(struct node **head , int value);
 
+// main function
 int main(void){
-    int n;
-    struct node *head = malloc(sizeof (node));
-    if(head ==NULL){
+    int n, n1;
+    struct node *head;
+    head = (struct node *) malloc (sizeof (node));
+    if(head==NULL){
         fprintf(stderr,"memory allocation failed");
         exit(EXIT_FAILURE);
     }
     head->data = 100;
     head->link = NULL;
 
-    struct node *current = malloc(sizeof(node));
-    if(current ==NULL){
-        fprintf(stderr,"memory allocation failed");
+    struct node *current = (struct node *) malloc (sizeof (node));
+    if(current==NULL) {
+        fprintf(stderr, "memory allocation failed");
         exit(EXIT_FAILURE);
     }
     current->data = 110;
     current->link = NULL;
     head->link = current;
 
-    current = (struct node *) malloc (sizeof(node));
-    if(current ==NULL){
-        fprintf(stderr,"memory allocation failed");
+    current = (struct node *) malloc(sizeof (node));
+    if(current==NULL) {
+        fprintf(stderr, "memory allocation failed");
         exit(EXIT_FAILURE);
     }
     current->data = 120;
     current->link = NULL;
     head->link->link = current;
-
-    fprintf(stdout,"insert data to store:\n");
+    fprintf(stdout,"insert a data to store in the beginning of the linked list:\n");
     scanf("%d", &n);
+    fprintf(stdout,"insert a data to store at the end of the linked list:\n");
+    scanf("%d", &n1);
 
-    add_at_end(head,n);
+    // function calls
+
+    add_beg(&head,n);
+    add_at_end(head,n1);
     print_data(head);
-    dispose_list(head);
-    count_node(head);
+    count_nodes(head);
     return (EXIT_SUCCESS);
 }
 
-void count_node (struct node *head){
-    int count = 0;
-    if(head ==NULL){
-        fprintf(stdout,"0 nodes");
+
+// **head -> to return a pointer to the head of the upgraded linked list
+void add_beg(struct node **head , int value){
+    struct node *ptr = (struct node *) malloc (sizeof(node));
+    if(ptr ==NULL){
+        fprintf(stdout,"memory allocation failed");
+        exit(EXIT_FAILURE);
     }
-    struct node *ptr = NULL;
+    ptr->data = value;
+    ptr->link = NULL;
+
+    // link the first element to the second element
+    ptr->link = *head;
+
+    // shift the head to the beginning
+    *head = ptr;
+
+}
+
+
+
+void add_at_end(struct node *head, int value){
+    struct node *ptr, *tmp;
     ptr = head;
-    while (ptr != NULL){
-        count++;
+    tmp = (struct node *)malloc(sizeof (node));
+    if(tmp == NULL){
+        fprintf(stderr,"memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    tmp->data = value;
+    tmp->link = NULL;
+
+    while (ptr->link!=NULL){
         ptr = ptr->link;
     }
-    fprintf(stdout,"num of nodes: %d\n",count);
+    ptr->link = tmp;
+    fprintf(stdout,"a node has been added at the end of the list successfully!!\n");
     return;
 }
 
-void print_data (struct node *head){
+void print_data(struct node *head){
+    struct node *ptr;
     int i = 1;
-    if(head==NULL){
-        fprintf(stdout,"list is empty");
-    }
-    struct node *ptr = NULL;
     ptr = head;
-    while (ptr != NULL){
-        fprintf(stdout,"data(%d): %d\n",i ,ptr->data);
+    while (ptr!=NULL){
+        fprintf(stdout,"node (%d): %d\n", i, ptr->data);
         i++;
         ptr = ptr->link;
     }
     return;
 }
 
-void add_at_end (struct node *head, int data){
-    struct node *ptr, *tmp;
-    ptr = head;
-    tmp = (struct node *) malloc(sizeof (node));
-    tmp->data = data;
-    tmp->link = NULL;
-    while(ptr->link!=NULL){
-        ptr = ptr->link;
-    }
-    ptr->link = tmp;
-    return;
-}
-void dispose_list(struct node *head){
-    node *ptr = malloc(sizeof (node));
-    if ( ptr == NULL){
-        fprintf(stderr,"memory allocation failed");
+void count_nodes(struct node *head){
+    struct node *ptr = head;
+    int count = 0;
+    if(head == NULL){
+        fprintf(stdout,"the list is empty");
         exit(EXIT_FAILURE);
     }
-    while (head!= NULL){
-        ptr = head;
-        head = head->link;
-        free(ptr);
+    while(ptr!=NULL){
+        count++;
+        ptr = ptr->link;
     }
-    return;
+    fprintf(stdout,"number of nodes: %d", count);
+    return ;
 }
