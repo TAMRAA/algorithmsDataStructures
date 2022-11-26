@@ -1,43 +1,45 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 typedef struct node{
     struct node *prev;
     int data;
     struct node *next;
+
 }node;
 
-// function prototypes
+//Function prototypes
 struct node* add_to_empty(struct node *head, int value);
-struct node* add_beg(struct node *head, int data);
+struct node* add_beginning(struct node *head, int value);
+struct node* add_at_end (struct node *head, int value);
+void print_data(struct node *head);
 
-
-// main function
 int main(void){
     int value1, value2, value3;
-    int i = 1;
-    struct node *head = NULL;
-    struct node *ptr;
-    fprintf(stdout,"introduce value of the first node:\n");
-    scanf("%d", &value1);
-    fprintf(stdout,"introduce value of the node to replace the first node:\n");
-    scanf("%d", &value2);
-    head = add_to_empty(head,value1);
-    head = add_beg(head,value2);
-
-    ptr = head;
-    while (ptr!=NULL){
-        fprintf(stdout,"data(%d): %d\n", i, ptr->data);
-        ptr = ptr->next;
-        i++;
+    struct node *head = (struct node *) malloc(sizeof (node));
+    if(head == NULL){
+        fprintf(stdout,"memory allocation failed");
+        exit(EXIT_FAILURE);
     }
 
-    return (EXIT_SUCCESS);
+    fprintf(stdout,"insert data to initiate the doubly linked list:\n");
+    scanf("%d", &value1);
+    fprintf(stdout,"insert data to add at the beginning of the doubly linked list:\n");
+    scanf("%d", &value2);
+    fprintf(stdout,"insert data to add at the end of the doubly linked list:\n");
+    scanf("%d", &value3);
+    head = add_to_empty(head,value1);
+    head = add_beginning(head, value2);
+    head = add_at_end(head, value3);
+    print_data(head);
+    // function add beginning
 
+    exit(EXIT_SUCCESS);
 }
-struct node* add_to_empty(struct node *head, int value) {
-    struct node *ptr = (struct node *) malloc(sizeof(node));
-    if (ptr == NULL) {
+struct node* add_to_empty(struct node *head,int value) {
+    struct node *ptr = head;
+    if (head == NULL) {
         fprintf(stdout, "memory allocation failed");
         exit(EXIT_FAILURE);
     }
@@ -47,19 +49,58 @@ struct node* add_to_empty(struct node *head, int value) {
 
     head = ptr;
     return head;
-
 }
 
-struct node* add_beg(struct node *head, int data){
+struct node* add_beginning(struct node *head, int value){
     struct node *ptr = (struct node *) malloc(sizeof (node));
+    if(ptr == NULL){
+        fprintf(stdout,"memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    if(head==NULL){
+        fprintf(stdout,"the list is empty\n");
+        exit(EXIT_FAILURE);
+    }
 
     ptr->prev = NULL;
-    ptr->data = data;
+    ptr->data = value;
     ptr->next = NULL;
 
     ptr->next = head;
-    head->prev = ptr;
     head = ptr;
 
     return head;
+}
+
+struct node* add_at_end (struct node *head, int value){
+    struct node *ptr, *tmp;
+    ptr = (struct node *) malloc (sizeof(node));
+    if(ptr == NULL){
+        fprintf(stdout,"memory allocation failed");
+        exit (EXIT_FAILURE);
+    }
+    // assigning the node
+    ptr->prev = NULL;
+    ptr->data = value;
+    ptr->next = NULL;
+
+    tmp = head;
+    // traversal of the linked list
+    while (tmp->next!=NULL){
+        tmp = tmp->next;
+    }
+    tmp->next = ptr;
+    ptr->prev = tmp;
+    return head;
+}
+
+void print_data(struct node *head){
+    struct node *ptr = head;
+    int i = 1;
+    while (ptr!=NULL){
+        fprintf(stdout,"data(%d): %d\n",i,ptr->data);
+        i++;
+        ptr = ptr->next;
+    }
+
 }
