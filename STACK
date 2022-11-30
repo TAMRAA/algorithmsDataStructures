@@ -1,0 +1,136 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define MAX_C 10
+
+#define SUCCESS 1
+#define FAILURE 0
+
+typedef struct node{
+    int data;
+    struct node *link;
+}node;
+
+// function prototypes
+node *new_e();
+void read (int *value);
+void write(int value, int status);
+node *traversal(struct node *pTop);
+node *push(struct node *pTop, int value);
+node *pop(struct node *pTop, int *value , int *status);
+
+// Main function
+
+int main(void){
+    node *pTop;
+    int value, status;
+    char choice[MAX_C];
+
+    pTop = NULL;
+
+    do{
+        // User-Interface
+        fprintf(stdout,"Push (p) Pop(o) End (e) :\n");
+        scanf("%s", choice);
+
+        // STACK DATA STRUCTURE LOGIC
+        if(strcmp(choice,"p") == 0){
+
+            read(&value);
+            pTop = push(pTop,value);
+            pTop = traversal(pTop);
+
+        }else if(strcmp(choice,"o") == 0){
+
+            pTop = pop(pTop,&value, &status);
+            write(value,status);
+            pTop = traversal(pTop);
+
+        }else{
+
+            if(strcmp(choice,"e") != 0){
+                fprintf(stdout,"Wrong choice\n");
+            }
+        }
+
+    } while (strcmp(choice,"e")!=0);
+
+
+    return (EXIT_SUCCESS);
+
+}
+
+// Create new node
+
+
+node *new_e(){
+    node *ptr = (node *) malloc(sizeof (node));
+    if(ptr==NULL){
+        fprintf(stdout,"memory allocation failed!!");
+        exit(EXIT_FAILURE);
+    }
+    return ptr;
+}
+
+// Push data into the STACK
+
+
+node *push(struct node *pTop, int value){
+    node * pNew = new_e();
+    pNew->data = value;
+    pNew->link = pTop;
+    pTop = pNew;
+    return pTop;
+}
+
+
+// Pop data from the STACK
+
+
+node *pop(struct node *pTop, int *value , int *status){
+    node *pOld ;
+    if(pTop!=NULL){
+        *status = SUCCESS;
+        *value = pTop->data;
+        pOld = pTop;
+        pTop = pTop->link;
+        free(pOld);
+    }else{
+        *status = FAILURE;
+    }
+    return (pTop);
+}
+
+
+node *traversal(struct node *pTop){
+    struct node *ptr;
+
+    fprintf(stdout,"pTop-> ");
+    ptr = pTop;
+    while (ptr!=NULL){
+        fprintf(stdout,"%d -> ",ptr->data);
+        ptr = ptr->link;
+    }
+
+    fprintf(stdout,"NULL\n");
+
+    return pTop;
+}
+
+
+void read (int *value){
+    fprintf(stdout,"insert data: \n");
+    scanf("%d",value);
+    return;
+}
+
+
+void write(int value, int status){
+    if(status == SUCCESS){
+        fprintf(stdout,"Element %d is popped\n", value);
+    }else{
+        // Status Failure
+        fprintf(stdout,"Stack is empty\n");
+    }
+    return;
+}
