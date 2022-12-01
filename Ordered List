@@ -1,0 +1,215 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+
+/* structure declaration */
+typedef struct node {
+    int data;
+    struct node *link;
+} node;
+
+/* function prototypes */
+int read (void);
+node *insert (node *head, int val);
+void search (node *head, int val);
+node *delete_first (node *head);
+node *delete_last (node *head);
+node *delete (node *head, int val);
+void display (node *head);
+
+/*
+ *  main program
+ */
+int main(void) {
+    node *head=NULL;
+    int val, stop=0;
+    char choice;
+
+    while (stop == 0) {
+        fprintf(stdout, "\nAvailable commands:\n");
+        fprintf(stdout, "  i: insert a value (sorted)\n");
+        fprintf(stdout, "  s: search a value\n");
+        fprintf(stdout, "  f: delete the first value\n");
+        fprintf(stdout, "  l: delete the last value\n");
+        fprintf(stdout, "  d: delete a specified value\n");
+        fprintf(stdout, "  c: display the list contents\n");
+        fprintf(stdout, "  e: end program\n");
+        fprintf(stdout, "Make your choice: ");
+        scanf("%c%*c", &choice);
+
+        switch (choice) {
+            case 'i': val = read();
+                head = insert(head, val);
+                break;
+            case 's': val = read();
+                search(head, val);
+                break;
+            case 'f': head = delete_first(head);
+                break;
+            case 'l': head = delete_last(head);
+                break;
+            case 'd': val = read();
+                head = delete(head, val);
+                break;
+            case 'c': display(head);
+                break;
+            case 'e': fprintf(stdout, "End of session.\n");
+                stop = 1;
+                break;
+            default : fprintf(stdout, "Wrong choice!\n");
+                break;
+        }
+    }
+
+    return (EXIT_SUCCESS);
+}
+
+/*
+ *  read in a value
+ */
+int read (void) {
+    int val;
+
+    fprintf(stdout, "Value: ");
+    scanf("%d%*c", &val);
+
+    return val;
+}
+
+/*
+ *  insert a value in the list (sorted)
+ */
+node *insert (node *head, int val) {
+    node *ptr, *q=head;
+
+    ptr = (node *)malloc(sizeof(node));
+    ptr->data = val;
+    ptr->link = NULL;
+
+    /* insert ahead */
+    if (head==NULL || val < head->data) {
+        ptr->link = head;
+        return ptr;
+    }
+
+    /*
+     *  scan the list with the q pointer in order to find
+     *  the correct position where to perform the insertion
+     */
+    while (q->link!=NULL && q->link->data<val) {
+        q = q->link;
+    }
+    ptr->link = q->link;
+    q->link = ptr;
+    return head;
+}
+
+/*
+ *  search a value in the list
+ */
+void search (node *head, int val) {
+    node *ptr;
+    int i;
+
+    for (ptr=head, i=0; ptr!=NULL && ptr->data <val; ptr = ptr->link, i++) ;
+
+    if (ptr!=NULL && ptr->data==val) {
+        fprintf(stderr, "Element found (index = %d)\n", i);
+    } else {
+        fprintf(stderr, "Element NOT found.\n");
+    }
+}
+
+/*
+ *  delete the first element of the list
+ */
+node *delete_first (node *head) {
+    node *p;
+
+    /* empty list */
+    if (head != NULL) {
+        p = head->link;
+        free(head);
+        return p;
+    }
+
+    return head;
+}
+
+/*
+ *  delete a list element, keeping it sorted
+ */
+node *delete_last (node *head) {
+    node *ptr, *q=head;
+
+    /* empty list */
+    if (head == NULL) {
+        fprintf(stderr, "Error: empty list\n");
+        return NULL;
+    }
+
+    /* delete ahead */
+    if (head->link == NULL) {
+        free(head);
+        return NULL;
+    }
+
+    /* scan the list with the q pointer */
+    while (q->link->link!=NULL) {
+        q = q->link;
+    }
+    ptr = q->link;
+    q->link = NULL;
+    free(ptr);
+
+    return head;
+}
+
+/*
+ *  delete a list element, keeping it sorted
+ */
+node *delete (node *head, int val) {
+    node *ptr, *q=head;
+
+    /* empty list */
+    if (head == NULL) {
+        fprintf(stderr, "Error: empty list\n");
+        return NULL;
+    }
+
+    /* delete ahead */
+    if (val == head->data) {
+        ptr = head->link;
+        free(head);
+        return ptr;
+    }
+
+    /*
+     *  scan the list with the q pointer in order to find
+     *  the element to remove from the list
+     */
+    while (q->link!=NULL && q->link->data<val) {
+        q = q->link;
+    }
+    if (q->link!=NULL && q->link->data==val) {
+        ptr = q->link;
+        q->link = ptr->link;
+        free(ptr);
+    } else {
+        fprintf(stderr, "Element NOT found.\n");
+    }
+
+    return head;
+}
+
+/*
+ *  display the list contents
+ */
+void display (node *head) {
+    int i=0;
+
+    while (head != NULL) {
+        fprintf(stderr, "Element %d = %d\n", i++, head->data);
+        head = head->link;
+    }
+}
