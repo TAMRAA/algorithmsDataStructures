@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define MAX_STR    10
+#define N 10
 
 #define SUCCESS 1
 #define FAILURE 0
@@ -12,96 +11,102 @@ typedef struct node{
     struct node *link;
 }node;
 
-node *enqueue (node *pTail, int val);
-node *dequeue (node *pTail, int *val, int *status);
+// Function prototypes
 node *newE();
-void traversal (node *pTail);
-void read (int *val);
-void write (int val, int status);
+node *enqueue(struct node *pTail, int value);
+node *dequeue (struct node *pTail, int *value, int *status);
+node *traversal(struct node *pTail);
+void read(int *value);
+void write (int status, int value);
 
-int main(void)
-{
-    node *pTail;
-    char choice[MAX_STR];
-    int val, status;
 
-    pTail = NULL;
 
-    do {
-        printf("make your choice (enqueue (e), dequeue (d), traversal (t), End (f)):\n");
-        scanf ("%s", choice);
+// Main Function
+int main(void){
+    node *tail;
+    int value, status;
+    char choice[N];
 
-        if (strcmp (choice, "e") == 0) {
-            read (&val);
-            pTail = enqueue (pTail, val);
-        } else
-        if (strcmp (choice, "d") == 0) {
-            pTail = dequeue (pTail, &val, &status);
-            write (val, status);
-        } else {
-            if (strcmp (choice, "t") == 0) {
-                traversal (pTail);
-            } else {
-                if (strcmp (choice, "f") != 0) {
-                    printf ("Wrong Choice.\n");
+
+    tail = NULL;
+
+    do{
+        fprintf(stdout,"choose operation: ( Enqueue(e) Dequeue(d) Traversal(t) end(f) )\n");
+        scanf("%s",choice);
+
+        if(strcmp(choice,"e")==0){
+            read(&value);
+            tail = enqueue(tail,value);
+            tail = traversal(tail);
+
+        }else if(strcmp(choice,"d")==0){
+            tail = dequeue(tail,&value,&status);
+            write(status,value);
+            tail = traversal(tail);
+        }else {
+            if (strcmp(choice, "t") == 0) {
+                tail = traversal(tail);
+            }else{
+                if(strcmp(choice, "f") != 0){
+                    fprintf(stdout,"Wrong Input\n");
                 }
             }
         }
-    } while (strcmp (choice, "f") != 0);
+    } while (strcmp(choice,"f")!=0);
 
-    return (SUCCESS);
+
+    return (EXIT_SUCCESS);
 }
 
-node *enqueue(node *pTail,int val)
-{
-    node *pNew;
+node *newE(){
+    node *ptr = (node *) malloc(sizeof (node));
+    if(ptr == NULL){
+        fprintf(stdout,"memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    return (ptr);
+}
 
-    // create new node
-    pNew = newE ();
-
-    pNew->data = val;
-
-    // In case the queue is empty
-    if (pTail==NULL) {
-        pTail = pNew;
+node *enqueue(struct node *pTail, int value){
+    node *ptr = newE();
+    ptr->data = value;
+    if(pTail == NULL){
+        pTail = ptr;
         pTail->link = pTail;
-    } else {
-        pNew->link = pTail->link;
-        pTail->link = pNew;
-        pTail = pNew;
+    }else{
+        ptr->link = pTail->link;
+        pTail->link = ptr;
+        pTail = ptr;
     }
 
     return (pTail);
+
 }
 
-node *dequeue(node *pTail,int *val,int *status)
-{
+node *dequeue (struct node *pTail, int *value, int *status){
     node *pOld;
-
-    if (pTail != NULL) {
+    if(pTail != NULL){
         *status = SUCCESS;
 
-        // Circular Singly
-        if (pTail == pTail->link) {
-            *val = pTail->data;
-            free (pTail);
+        // Case of One node
+        if(pTail == pTail->link){
+            *value = pTail->data;
+            free(pTail);
             pTail = NULL;
+        // Case of Multiple node
         }else{
-            //
             pOld = pTail->link;
-            *val = pOld->data;
+            *value = pOld->data;
             pTail->link = pOld->link;
-            free (pOld);
+            free(pOld);
         }
-    } else {
+
+    }else{
         *status = FAILURE;
     }
-
     return (pTail);
 }
-
-void traversal(node *pTail)
-{
+node *traversal(struct node *pTail){
     node *pTmp;
 
     fprintf (stdout, "pTail -> ");
@@ -117,40 +122,21 @@ void traversal(node *pTail)
         fprintf (stdout, "pTail \n");
     }
 
-    return;
+    return (pTail);
 }
 
-node *newE()
-{
-    node *p;
-
-    p = (node *) malloc (sizeof (node));
-
-    if (p==NULL) {
-        fprintf (stderr, "Memory allocation failed\n");
-        exit(EXIT_FAILURE);
-    }
-
-    return (p);
-}
-
-void read(int *val)
-{
-    fprintf (stdout, "Element: ");
-    scanf ("%d", val);
+void read(int *value){
+    fprintf(stdout,"insert value:\n");
+    scanf("%d", value);
 
     return;
 }
 
-void write(int val,int status)
-{
-    if (status == SUCCESS) {
-        fprintf (stdout, "Element: %d\n", val);
-    } else {
-        fprintf (stdout, "Empty Queue.\n");
+void write (int status, int value){
+    if(status ==SUCCESS){
+        fprintf(stdout,"element %d is out of the queue",value);
+    }else{
+        fprintf(stdout,"Queue is empty");
     }
     return;
 }
-
-
-
