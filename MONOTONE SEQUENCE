@@ -3,8 +3,10 @@
 #include <string.h>
 #define N 5
 
+VERIFICATION PROBLEM
+
 // Function prototypes
-void formatting (char nin[], char nout[],int lmax);
+
 
 // Main function
 
