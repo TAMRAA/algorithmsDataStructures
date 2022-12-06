@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define N 5
+
+// Function prototypes
+void formatting (char nin[], char nout[],int lmax);
+
+// Main function
+
+// Program to check monotonicity of a sequence
+int main(void){
+    int i, xi, xj;
+    int monotonus = 1;
+
+    fprintf(stdout,"x0:\t");
+    scanf("%d", &xi);
+
+    for (i = 1; i < N && (monotonus); ++i) {
+        fprintf(stdout,"x%d:\t", i);
+        scanf("%d", &xj);
+        if(xi>xj){
+            monotonus = 0;
+        }
+        // update logic
+        xi = xj;
+    }
+    if(monotonus){
+        fprintf(stdout,"the sequence is monotonous yaayy!!");
+    }else{
+        fprintf(stdout,"thr sequence is not monotonous");
+    }
+
+    return (EXIT_SUCCESS);
+}
+
