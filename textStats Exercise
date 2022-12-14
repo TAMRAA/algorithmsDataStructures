@@ -1,0 +1,58 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#define L 20
+
+int textStats(char* filename);
+int main(){
+    char fileName[L];
+    int n;
+    fprintf(stdout,"name of file: ");
+    scanf("%s", fileName);
+
+    // function call
+    n = textStats(fileName);
+    fprintf(stdout,"number of strings: %d", n);
+
+    return (EXIT_FAILURE);
+}
+
+int textStats(char* filename){
+    FILE *fp;
+
+    int i;
+    int occurrence[10]= {0};
+    char tmp[10];
+    int num_str=0;
+    int upper = 0, letter = 0;
+    float percentage;
+
+    fp = fopen(filename,"r");
+    if(fp==NULL){
+        fprintf(stdout,"error opening file\n");
+        exit(EXIT_FAILURE);
+    }
+
+    while (fscanf(fp,"%s",tmp)!=EOF){
+        num_str++;
+        occurrence[strlen(tmp)-1]++;
+        for(i=0;i< strlen(tmp);i++){
+            letter++;
+            if(isupper(tmp[i])){
+                upper++;
+            }
+        }
+    }
+    fclose(fp);
+    percentage = (100 * (float )(upper)) / (float )(letter);
+    for(i=0;i<10;i++){
+        if(occurrence[i]!=0){
+            fprintf(stdout,"%d string/s with length %d\n", occurrence[i], i+1);
+        }
+    }
+    fprintf(stdout,"%.2f with all capital letters\n", percentage);
+
+    return num_str;
+
+}
