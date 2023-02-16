@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define fileName "../transactions.txt"
+#define MAX 100
+#define N 20
+
+typedef struct {
+    char iban[28];
+    float amount;
+}transaction;
+
+
+// Function prototypes
+int selectTransactions(transaction *list,int n,transaction **selTransactions,char *argument);
+float computeBalance(transaction **selTransactions,int nSel, char *argument);
+float readScores(char *filename);
+void printCompact(char *word);
+
+
+// MAIN FUNCTION
+int main (int argc, char *argv[]){}
+
+// Functions
+
+float readScores(char *filename){
+    FILE *fp;
+    int counter[31], i, tmp;
+    int sum = 0, count = 0;
+    float average, successRate;
+    int failed = 0;
+
+    // Counter array
+    for(i=0;i<31;i++){
+        counter[i] = 0;
+    }
+
+    fp = fopen(filename,"r");
+    if(fp == NULL){
+        fprintf(stdout,"Error opening file\n");
+        return (EXIT_FAILURE);
+    }
+    while (fscanf(fp,"%*s %d", &tmp) != EOF){
+        counter[tmp]++;
+    }
+    fclose(fp);
+
+    for(i=0;i<31;i++){
+        if(counter[i]!=0){
+            if(i>=18){
+                sum = sum + (i * counter[i]);
+                count += counter[i];
+            }else{
+                failed += counter[i];
+            }
+            fprintf(stdout,"score %d: %d students\n", i, counter[i]);
+        }
+    }
+    successRate = (float) count/ (float)(count+failed);
+    average = (float) sum / (float) count;
+    fprintf(stdout,"average sufficient score: %.2f\n", average);
+
+    return successRate;
+}
+
+
+void printCompact(char *word) {
+    int i, j, count;
+    char currChar;
+
+    i = 0;
+    while (word[i] != '\0')
+    {
+        currChar = word[i];
+        count = 0;
+
+        // Count the number of occurrences of current character
+        j = i;
+        while (word[j] == currChar)
+        {
+            count++;
+            j++;
+        }
+        if(count>=2){
+            fprintf(stdout,"%c%d", currChar, count);
+        }else{
+            fprintf(stdout,"%c", currChar);
+        }
+
+        // Update the index
+        i = j;
+    }
+}
+int selectTransactions(transaction *list,int n,transaction **selTransactions,char *argument){
+    char string[10];
+    int i, nSel = 0;
+    strcpy(string,argument);
+    for(i=0;i<n;i++){
+        if(strcmp(list[i].iban,string) == 0){
+            selTransactions[nSel++] = &list[i];
+        }
+    }
+    return nSel;
+}
+
+float computeBalance(transaction **selTransactions,int nSel, char *argument){
+    float balance;
+    int i;
+    balance = atof(argument);
+    for(i=0;i<nSel;i++){
+        balance += selTransactions[i]->amount;
+    }
+    return balance;
+}
