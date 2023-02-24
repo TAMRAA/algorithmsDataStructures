@@ -2,7 +2,7 @@
 #include "string.h"
 #define N 10
 void reverse_string(char *s);
-// > <
+
 int main(){
     char string1[N] = {'t','a','m','r','a'};
     int i;
