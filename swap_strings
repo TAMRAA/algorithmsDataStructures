@@ -1,23 +1,20 @@
-#include "stdio.h"
-#include "string.h"
-#define N 10
-// > <
-void swap_string(char *string1, char *string2);
-int main(){
-    char str1[N], str2[N];
-    printf("insert first string:\n");
-    scanf("%s", str1);
-    printf("insert second string:\n");
-    scanf("%s", str2);
-    // function call
-    swap_string(str1,str2);
-    printf("first string: %s\n", str1);
-    printf("second string: %s", str2);
-    return 0;
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#define N 100
+void swap_string(char v1[], char v2[]);
+int main(void){
+    char string1[N] = "Abdallah";
+    char string2[N] = "Tamra";
+
+    swap_string(string1,string2);
+    fprintf(stdout,"%s %s", string1, string2);
+
+    return (EXIT_SUCCESS);
 }
-void swap_string(char *string1, char *string2){
-    char *tmp[N];
-    strcpy(tmp,string1);
-    strcpy(string1,string2);
-    strcpy(string2,tmp);
+void swap_string(char v1[], char v2[]){
+    char *tmp;
+    tmp = strdup(v1);
+    strcpy(v1,v2);
+    strcpy(v2,tmp);
 }
