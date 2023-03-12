@@ -5,7 +5,6 @@
 #define fileName "../input.txt"
 
 // Data Structure
-
 typedef struct {
     char code[6];
     char depCity[4];
@@ -15,11 +14,12 @@ typedef struct {
 }flight_t;
 
 // Function Prototypes
-
 int file_read(flight_t *flights, char *name);
 void connection_search (flight_t *flights, int nf, flight_t request);
 void info_write (flight_t flight);
 
+
+// Main Function
 int main(void){
     flight_t flights[maxFlights], request;
     int flightNum;
@@ -32,6 +32,10 @@ int main(void){
     scanf("%f", &request.depTime);
 
     flightNum = file_read(flights, fileName);
+    if(flightNum == 0){
+        fprintf(stdout,"File cannot be empty");
+        return (EXIT_FAILURE);
+    }
     connection_search(flights,flightNum,request);
 
     return (EXIT_SUCCESS);
@@ -52,15 +56,18 @@ int file_read(flight_t *flights, char *name){
     fclose(fp);
     return i;
 }
+
 void connection_search (flight_t *flights, int nf, flight_t request){
     int i, j, found;
+
     for (i=0; i<nf; i++) {
         if (strcmp(request.depCity, flights[i].depCity)==0 && request.depTime<=flights[i].depTime) {
             if (strcmp(request.arrCity, flights[i].arrCity)==0) {
                     printf("Direct flight:\n");
                     info_write(flights[i]);
-            } else {
+            }else{
                 found = 0;
+                // Second cycle to check for second flight
                 for (j=0; j<nf && !found; j++) {
                     if (strcmp(flights[j].depCity, flights[i].arrCity)==0
                         && strcmp(request.arrCity, flights[j].arrCity)==0
