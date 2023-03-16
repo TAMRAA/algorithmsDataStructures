@@ -3,7 +3,6 @@
 #include <string.h>
 #define N 1000
 
-
 // dynamic structure for student data
 typedef struct {
     char *firstName, *lastName;
@@ -15,7 +14,7 @@ typedef struct {
 student_t *create_structure(int n);
 char **malloc2d (int r, int c);
 char *free2d (char **m, int r);
-int *array_create(int n);
+int *malloc1d(int n);
 
 
 int main(void){
@@ -61,7 +60,7 @@ student_t *create_structure(int n){
 
 // Dynamic array 1D
 
-int *array_create(int n){
+int *malloc1d(int n){
     int *ptr;
     ptr = (int *) malloc (n*sizeof (int));
     if(ptr==NULL){
@@ -109,4 +108,3 @@ char *free2d (char **m, int r) {
     free(m);
     return NULL;
 }
-
