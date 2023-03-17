@@ -20,7 +20,7 @@ void rectangle (int b, int h){
     int i, j;
     for(i=0;i<h;i++){
         for(j=0;j<b;j++){
-            if(i!=0 && i!= h-1 && j!=0 && j!= b-1){
+            if(i >0 && i< h-1 && j> 0 && j < b-1){ // ( i!=0 && i!=h-1 && j !=0 && j!= b-1 ) 
                 fprintf(stdout," ");
             }else{
                 fprintf(stdout,"*");
@@ -29,4 +29,3 @@ void rectangle (int b, int h){
         fprintf(stdout,"\n");
     }
     return;
-}
