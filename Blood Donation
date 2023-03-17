@@ -1,0 +1,106 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define idLength 6
+#define stringLength 21
+
+typedef struct {
+    char id[idLength];
+    char name[stringLength];
+    char surname[stringLength];
+    int quantity;
+    int numDonation;
+}donor_t;
+
+//Function prototypes
+
+donor_t *donorRead(int *numPtr);
+void donationRead (donor_t *donors, int n);
+void printResult(donor_t *donors, int n);
+
+
+// MAIN FUNCTION
+
+int main(void){
+    donor_t *donors;
+    int num;
+    donors = donorRead(&num);
+    donationRead(donors,num);
+    printResult(donors,num);
+    return (EXIT_SUCCESS);
+}
+donor_t *donorRead(int *numPtr){
+    FILE *fp = fopen("../voluntary.txt","r");
+    char id[idLength], name[stringLength], surname[stringLength];
+    int i, n;
+    donor_t *donors;
+
+    n = 0;
+    while(fscanf(fp,"%s %*s %s %s", id,name,surname)!=EOF){
+        n++;
+    }
+    fclose(fp);
+
+    // Allocation of structure
+    donors = (donor_t *) malloc(n * sizeof (donor_t));
+    if(donors == NULL){
+        fprintf(stderr,"memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    fp = fopen("../voluntary.txt","r");
+    if(fp == NULL){
+        fprintf(stderr,"Error opening file");
+        exit(EXIT_FAILURE);
+    }
+    for(i=0; i<n;i++){
+        fscanf(fp,"%s %*s %s %s", id, name, surname);
+        strcpy(donors[i].id,id);
+        strcpy(donors[i].name,name);
+        strcpy(donors[i].surname,surname);
+        donors[i].quantity = 0;
+        donors[i].numDonation = 0;
+    }
+    fclose(fp);
+
+    // Save number of donors
+    *numPtr = n;
+
+    // Return the saved structure
+    return donors;
+}
+
+void donationRead (donor_t *donors, int n){
+    FILE *fp;
+    char id[idLength];
+    int quantity, i;
+
+    fp = fopen("../donation.txt","r");
+    if(fp == NULL){
+        fprintf(stderr,"error opening file");
+        exit(EXIT_FAILURE);
+    }
+
+    while (fscanf(fp,"%s %d", id, &quantity) != EOF){
+        for(i=0;i<n;i++){
+            // if id match
+            if(strcmp(donors[i].id, id)==0){
+                donors[i].quantity += quantity;
+                donors[i].numDonation++;
+            }
+        }
+    }
+    fclose(fp);
+    return;
+}
+
+void printResult(donor_t *donors, int n){
+    int i;
+    fprintf(stdout,"DONORS STATISTICS\n");
+    for(i=0;i<n;i++){
+        fprintf(stdout,"%s %s ",donors[i].id, donors[i].name);
+        fprintf(stdout,"%s: %d ",donors[i].surname, donors[i].numDonation);
+        fprintf(stdout,"donation/s - %d cc",donors[i].quantity);
+        fprintf(stdout,"\n");
+    }
+    return;
+}
