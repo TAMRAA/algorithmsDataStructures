@@ -27,6 +27,7 @@ int main(void){
     donors = donorRead(&num);
     donationRead(donors,num);
     printResult(donors,num);
+    free(donors);
     return (EXIT_SUCCESS);
 }
 donor_t *donorRead(int *numPtr){
