@@ -1,50 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 #define N 10
-void subsequence (int *a, int n);
-int main(void){
-    int n,i;
-    int array[N];
-    fprintf(stdout,"insert size of array:\n");
-    scanf("%d", &n);
 
-    fprintf(stdout,"insert array:\n");
-    for(i=0;i<n;i++){
-        scanf("%d", &array[i]);
-    }
+void subsequence (int *v, int n);
+
+int main(void){
+
+    int array[N] = {1,3,7,1,0,1,9,3,1,0};
+
     // function call
-    subsequence(array,n);
+    subsequence(array,N);
 
     return (EXIT_SUCCESS);
 }
 
-void subsequence (int *a, int n){
-    int i, j, k, h;
+void subsequence (int *v, int n){
+    int l, j, k, h;
     int found, toPrint;
+
     found = 0;
-    for(i=n; !found && i>0;i--){
-        for(j=0;j<=n-i;j++){
+    for(l=n; !found && l>0 ;l--){
+        for(j=0;j<=n-l;j++){
             toPrint = 1;
-            // check condition
-            for(k=j; toPrint && k<i+j;k++){
-                if(a[k] == 0){
+            for(k=j; toPrint && k<j+l; k++){
+                if(v[k]%2 == 0){
                     toPrint = 0;
                 }
             }
             if(toPrint){
                 found = 1;
-                fprintf(stdout,"maximum subsequence:\n");
-                for(h=j;h<i+j;h++){
-                    fprintf(stdout,"%d", a[h]);
+                fprintf(stdout,"Maximum subsequence: ");
+                for(k=j;k<j+l;k++){
+                    fprintf(stdout,"%d", v[k]);
                 }
                 fprintf(stdout,"\n");
-                j = k+1;
+                j = k;
             }
-
         }
-
     }
-
 
 }
