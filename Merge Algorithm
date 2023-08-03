@@ -1,0 +1,46 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 4
+
+
+// Function Prototype
+void Merge(int a[], int b[], int c[], int n);
+// Main function
+int main (void){
+    int i;
+    int arr1[N] = {2,8,15,18};
+    int arr2[N] = {5,9,12,17};
+    int finalArray[N+N]={0};
+    Merge(arr1,arr2,finalArray,N);
+
+    for(i=0;i<N+N;i++){
+        fprintf(stdout,"%d ", finalArray[i]);
+    }
+
+    return (EXIT_SUCCESS);
+}
+
+// Function Declaration
+void Merge(int a[], int b[], int c[], int n){
+    int i = 0, j = 0, k = 0;
+
+    // Compare and copy elements
+
+    while(i < n && j < n){
+        if(a[i] < b[j]){
+            c[k++] = a[i++];
+        }else{
+            c[k++] = b[j++];
+        }
+    }
+
+    // Copy the remaining elements if they exist
+
+    for(;i<n;i++){
+        c[k++] = a[i];
+    }
+    for(;j<n;j++){
+        c[k++] = b[j];
+    }
+
+}
