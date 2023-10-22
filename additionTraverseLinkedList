@@ -1,0 +1,176 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node{
+    int data;
+    struct node *next;
+}node;
+
+
+// function prototypes
+int countNode(struct node *head);
+void traverseNode (struct node *head);
+void addBeginning(struct node **head, int value);
+void addPosition(struct node *head, int value, int pos);
+void addEnd(struct node *head, int value);
+
+
+
+
+// main function
+int main(void){
+    struct node *head, *current;
+    int counter, data, position;
+
+    head = (struct node *) malloc(sizeof (node));
+    if(head == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    head->data = 100;
+    head->next = NULL;
+
+    current = (struct node *) malloc(sizeof (node));
+    if(current == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    current->data = 110;
+    current->next = NULL;
+    head->next = current;
+
+    current = (struct node *) malloc(sizeof (node));
+    if(current == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    current->data = 120;
+    current->next = NULL;
+    head->next->next = current;
+
+    fprintf(stdout,"Insert value to store in the new node:\n");
+    scanf("%d", &data);
+
+    addBeginning(&head,data);
+
+    fprintf(stdout,"Insert value and position to store in the new next node:\n");
+    scanf("%d %d", &data,&position);
+
+    addPosition(head,data,position);
+
+    fprintf(stdout,"Insert value to store at the end of the list:\n");
+    scanf("%d", &data);
+
+    addEnd(head,data);
+
+    counter = countNode(head);
+    fprintf(stdout,"Total nodes = %d\n", counter);
+
+    traverseNode(head);
+
+
+
+    return (EXIT_SUCCESS);
+}
+
+int countNode(struct node *head){
+    node *ptr;
+    int counter = 0;
+    if(head == NULL){
+        fprintf(stdout,"List is empty\n");
+    }
+    else{
+        ptr = head;
+        while (ptr != NULL){
+            counter++;
+            ptr = ptr->next;
+        }
+    }
+    return counter;
+}
+
+void traverseNode (struct node *head){
+    node *ptr;
+    int i;
+
+    if(head == NULL){
+        fprintf(stdout,"List is empty\n");
+    }else{
+        ptr = head;
+        i = 1;
+        while (ptr != NULL){
+            fprintf(stdout,"node (%d) = %d\n", i, ptr->data);
+            ptr = ptr->next;
+            i++;
+        }
+    }
+}
+
+// Add a node at the beginning
+
+void addBeginning(struct node **head, int value){
+    struct node *ptr;
+
+    ptr = (struct node *) malloc(sizeof (node));
+    if(ptr == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    ptr->data = value;
+    ptr->next = NULL;
+
+    ptr->next = *head;
+    *head = ptr;
+
+}
+
+void addPosition(struct node *head, int value, int pos){
+    struct node *ptr;
+    node *ptr2;
+
+    ptr = (struct node *) malloc(sizeof (node));
+    if(ptr == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    ptr->data = value;
+    ptr->next = NULL;
+
+
+    ptr2 = head;
+    pos--;
+
+    while (pos!=1){
+        ptr2 = ptr2->next;
+        pos--;
+    }
+
+    ptr->next = ptr2->next;
+    ptr2->next = ptr;
+
+}
+
+void addEnd(struct node *head, int value){
+    struct node *ptr;
+    node *ptr2;
+
+    ptr = (struct node *) malloc(sizeof (node));
+    if(ptr == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    ptr->data = value;
+    ptr->next = NULL;
+
+    ptr2 = head;
+    while (ptr2 ->next != NULL){
+        ptr2 = ptr2->next;
+    }
+    
+    ptr2->next = ptr;
+
+}
