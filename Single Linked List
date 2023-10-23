@@ -240,7 +240,7 @@ struct node *del_list(struct node *head){
 }
 struct node *reverse_list(struct node *head){
     struct node *prev = NULL;
-    struct mode *next = NULL;
+    struct node *next = NULL;
     while (head!=NULL){
         next = head->link;
         head->link = prev;
