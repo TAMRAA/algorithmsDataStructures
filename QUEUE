@@ -13,9 +13,9 @@ typedef struct node{
 
 // Function prototypes
 node *newE();
-node *enqueue(struct node *pTail, int value);
-node *dequeue (struct node *pTail, int *value, int *status);
-node *traversal(struct node *pTail);
+node *enqueue(struct node *Tail, int value);
+node *dequeue (struct node *Tail, int *value, int *status);
+node *visit(struct node *Tail);
 void read(int *value);
 void write (int status, int value);
 
@@ -31,105 +31,103 @@ int main(void){
     tail = NULL;
 
     do{
-        fprintf(stdout,"choose operation: ( Enqueue(e) Dequeue(d) Traversal(t) end(f) )\n");
+        fprintf(stdout,"choose operation: enqueue, dequeue, visit or end\n");
         scanf("%s",choice);
 
-        if(strcmp(choice,"e")==0){
+        if(strcmp(choice,"enqueue")==0){
             read(&value);
             tail = enqueue(tail,value);
-            tail = traversal(tail);
+            tail = visit(tail);
 
-        }else if(strcmp(choice,"d")==0){
+        }else if(strcmp(choice,"dequeue")==0){
             tail = dequeue(tail,&value,&status);
             write(status,value);
-            tail = traversal(tail);
+            tail = visit(tail);
         }else {
-            if (strcmp(choice, "t") == 0) {
-                tail = traversal(tail);
+            if (strcmp(choice, "visit") == 0) {
+                tail = visit(tail);
             }else{
-                if(strcmp(choice, "f") != 0){
+                if(strcmp(choice, "end") != 0){
                     fprintf(stdout,"Wrong Input\n");
                 }
             }
         }
-    } while (strcmp(choice,"f")!=0);
+    } while (strcmp(choice,"end")!=0);
 
 
     return (EXIT_SUCCESS);
 }
 
 node *newE(){
-    node *ptr = (node *) malloc(sizeof (node));
+    node *ptr = (node *) malloc (sizeof (node));
     if(ptr == NULL){
-        fprintf(stdout,"memory allocation failed");
+        fprintf(stdout,"Memory allocation failed");
         exit(EXIT_FAILURE);
     }
     return (ptr);
 }
 
-node *enqueue(struct node *pTail, int value){
+node *enqueue(struct node *Tail, int value){
     node *ptr = newE();
     ptr->data = value;
-    if(pTail == NULL){
-        pTail = ptr;
-        pTail->link = pTail;
+    if(Tail == NULL){
+        Tail = ptr;
+        Tail->link = Tail;
     }else{
-        ptr->link = pTail->link;
-        pTail->link = ptr;
-        pTail = ptr;
+        ptr->link = Tail->link;
+        Tail->link = ptr;
+        Tail = ptr;
     }
 
-    return (pTail);
+    return (Tail);
 
 }
 
-node *dequeue (struct node *pTail, int *value, int *status){
-    node *pOld;
-    if(pTail != NULL){
+node *dequeue (struct node *Tail, int *value, int *status){
+    node *Old;
+    if(Tail != NULL){
         *status = SUCCESS;
 
         // Case of One node
-        if(pTail == pTail->link){
-            *value = pTail->data;
-            free(pTail);
-            pTail = NULL;
-        // Case of Multiple node
+        if(Tail == Tail->link){
+            *value = Tail->data;
+            free(Tail);
+            Tail = NULL;
+            // Case of Multiple nodes
         }else{
-            pOld = pTail->link;
-            *value = pOld->data;
-            pTail->link = pOld->link;
-            free(pOld);
+            Old = Tail->link;
+            *value = Old->data;
+            Tail->link = Old->link;
+            free(Old);
         }
 
     }else{
         *status = FAILURE;
     }
-    return (pTail);
+    return (Tail);
 }
-node *traversal(struct node *pTail){
-    node *pTmp;
+node *visit(struct node *Tail){
+    node *Tmp;
 
-    fprintf (stdout, "pTail -> ");
-    if (pTail == NULL) {
+    fprintf (stdout, "Tail -> ");
+    if (Tail == NULL) {
         fprintf (stdout, "NULL\n");
     } else {
-        pTmp = pTail;
+        Tmp = Tail;
         do {
-            fprintf (stdout, "%d -> ", pTmp->data);
-            pTmp = pTmp->link;
-        } while (pTmp != pTail);
+            fprintf (stdout, "%d -> ", Tmp->data);
+            Tmp = Tmp->link;
+        } while (Tmp != Tail);
 
         fprintf (stdout, "pTail \n");
     }
 
-    return (pTail);
+    return (Tail);
 }
 
 void read(int *value){
     fprintf(stdout,"insert value:\n");
     scanf("%d", value);
-
-    return;
 }
 
 void write (int status, int value){
@@ -138,5 +136,4 @@ void write (int status, int value){
     }else{
         fprintf(stdout,"Queue is empty");
     }
-    return;
 }
