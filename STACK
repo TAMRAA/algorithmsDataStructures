@@ -19,7 +19,6 @@ void read (int *value);
 void write(int status, int value);
 
 
-
 int main(void){
     node *Top;
     int value, status;
@@ -31,23 +30,23 @@ int main(void){
         fprintf(stdout,"Push (p) Pop (o) Traversal (t) End(e):\n");
         scanf("%s", choice);
 
-        if(strcmp(choice,"p")==0){
+        if(!strcmp(choice,"p")){
 
             read(&value);
             Top = push(Top,value);
             Top = traversal(Top);
 
-        }else if(strcmp(choice,"o")==0){
+        }else if(!strcmp(choice,"o")){
 
             Top = pop(Top, &status,&value);
             write(status,value);
             Top = traversal(Top);
 
         }else{
-            if(strcmp(choice,"t")==0){
+            if(!strcmp(choice,"t")){
                 Top = traversal(Top);
             }else{
-                if(strcmp(choice,"e")!=0){
+                if(strcmp(choice,"e") !=0 ){
                     fprintf(stdout,"Wrong Input\n");
                 }
             }
@@ -59,24 +58,25 @@ int main(void){
 }
 
 node *push(struct node *Top, int data){
-    node *ptr = (node *) malloc(sizeof (node));
-    if(ptr==NULL){
-        fprintf(stdout,"memory allocation failed\n");
+    node *ptr = (struct node *) malloc(sizeof (node));
+    if(ptr == NULL){
+        fprintf(stderr,"Memory allocation failed");
         exit(EXIT_FAILURE);
     }
     ptr->data = data;
     ptr->link = Top;
-
     Top = ptr;
 
-    return (Top);
-
+    return Top;
 }
 
 node *pop(struct node *Top,int *status, int *data) {
     node *ptr;
+    
+    // if the list is not empty
     if (Top != NULL) {
         ptr = Top;
+        // Save
         *status = SUCCESS;
         *data = ptr->data;
         Top = Top->link;
@@ -101,8 +101,6 @@ node *traversal(struct node *Top){
 void read (int *value){
     fprintf(stdout,"Insert a value:\n");
     scanf("%d", value);
-
-    return;
 }
 
 void write(int status, int value){
