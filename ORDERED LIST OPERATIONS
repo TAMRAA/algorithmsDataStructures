@@ -1,0 +1,191 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// ORDERED LIST OPERATIONS
+
+typedef struct node{
+    int data;
+    struct node *link;
+}node;
+
+
+// function prototypes
+
+node *newElement();
+node *extract(struct node *head, int val);
+node *insert (struct node *head, int val);
+void search(struct node *head, int val);
+void visit(struct node *head);
+
+
+// main function
+int main(void){
+    node *head, *current;
+
+    int value;
+
+    head = (struct node *) malloc(sizeof (node));
+    if(head == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    head->data = 100;
+    head->link = NULL;
+
+    current = (struct node *) malloc(sizeof (node));
+    if(current == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    current->data = 110;
+    current->link = NULL;
+    head->link = current;
+
+
+    current = (struct node *) malloc(sizeof (node));
+    if(current == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    current->data = 120;
+    current->link = NULL;
+    head->link->link = current;
+
+    current = (struct node *) malloc(sizeof (node));
+    if(current == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    current->data = 130;
+    current->link = NULL;
+    head->link->link->link = current;
+
+
+    fprintf(stdout,"Insert value to eliminate in the ordered linked list:\n");
+    scanf("%d", &value);
+
+    head = extract(head,value);
+    visit(head);
+
+    fprintf(stdout,"Insert value to add the the ordered linked list:\n");
+    scanf("%d", &value);
+
+    head = insert(head,value);
+    visit(head);
+
+    return (EXIT_SUCCESS);
+}
+
+
+// Functions Declaration
+
+void visit(struct node *head){
+    node *ptr;
+    ptr = head;
+    int i = 1;
+    while (ptr!= NULL){
+        fprintf(stdout,"node (%d) : %d\n", i, ptr->data);
+        ptr = ptr->link;
+        i++;
+    }
+}
+
+void search(struct node *head, int val){
+    node *ptr;
+
+    int pos = 1;
+
+    ptr = head;
+
+    // Stop right before the node ( HUGE SAVE OF TIME !! )
+    while (ptr != NULL && val > (ptr->data) ){
+        ptr = ptr->link;
+        pos ++;
+    }
+
+    if(ptr != NULL && val == (ptr->data)){
+        fprintf(stdout,"Found at index %d\n", pos);
+    }else{
+        fprintf(stdout,"The value %d is not in the list\n", val);
+    }
+
+}
+
+node *extract(struct node *head, int val){
+    node *ptr , *ptr2;
+
+    ptr2 = head;
+
+    // Empty List
+
+    if(head == NULL){
+        fprintf(stderr,"List is empty\n");
+        return NULL;
+    }
+
+    // Head extraction
+
+    if(val == head->data){
+        ptr = head->link;
+        fprintf(stdout,"%d is extracted from the list\n", head->data);
+        free(head);
+        return ptr;
+    }
+
+    // Search
+    while (ptr2->link != NULL && val > (ptr2->link->data)){
+        ptr2 = ptr2->link;
+    }
+
+    if(ptr2->link != NULL && val == (ptr2->link->data)){
+        ptr = ptr2->link;
+        ptr2->link = ptr->link;
+        fprintf(stdout,"%d is extracted from the list\n", ptr->data);
+        free(ptr);
+    }else{
+        fprintf(stdout,"Element NOT found");
+    }
+
+    return head;
+}
+
+node *insert (struct node *head, int val){
+    node *ptr, *ptr2;
+
+    ptr2 = head;
+
+    // Create new node
+    ptr = newElement();
+    ptr->data = val;
+    ptr->link = NULL;
+
+
+    // Head insertion
+
+    if (head == NULL || val < (head->data) ) {
+        ptr->link = head;
+        return ptr;
+    }
+
+    // Insert in order
+    while (ptr2->link != NULL && val > (ptr2->link->data)) {
+        ptr2 = ptr2->link;
+    }
+
+    ptr->link = ptr2->link;
+    ptr2->link = ptr;
+
+    return head;
+
+}
+
+node *newElement(){
+    struct node *ptr;
+    ptr = (struct node *) malloc(sizeof (node));
+    if(ptr == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        return NULL;
+    }
+    return ptr;
+}
