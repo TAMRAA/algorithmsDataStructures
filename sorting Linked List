@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef struct node{
+    int data;
+    struct node *link;
+}node;
+
+
+int main(void){
+
+
+
+    return (EXIT_SUCCESS);
+}
+
+void extractMaximum(struct node **head1, struct node **tmp){
+
+    node *max, *tmpPtr;
+
+    max = NULL;
+    tmpPtr = *head1;
+    while (tmpPtr!= NULL){
+        if(max == NULL || tmpPtr->data > max->data){
+            max = tmpPtr;
+        }
+        tmpPtr = tmpPtr->link;
+    }
+}
+
+void sortList(struct node *head1, struct node head2){
+        struct node *tmp;
+
+    while (head1 != NULL){
+        extractMaximum(&head1, &tmp);
+        // head2 = push(head2,tmp);
+    }
+
+}
