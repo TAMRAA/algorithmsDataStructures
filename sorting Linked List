@@ -7,9 +7,50 @@ typedef struct node{
     struct node *link;
 }node;
 
+// Function Prototype
+
+node *newElement();
+void visit(node *head);
+node *push(node *top, int val);
+node *sortList(struct node *head1, struct node *head2);
+void extractMaximum(struct node **head1, struct node **tmp);
 
 int main(void){
 
+    struct node *head, *current;
+    struct node *head2;
+
+    head2 = newElement();
+
+    head = (struct node *) malloc(sizeof (node));
+    if(head == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    head->data = 9;
+    head->link = NULL;
+
+    current = (struct node *) malloc(sizeof (node));
+    if(current == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    current->data = 21;
+    current->link = NULL;
+    head->link = current;
+
+
+    current = (struct node *) malloc(sizeof (node));
+    if(current == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    current->data = 17;
+    current->link = NULL;
+    head->link->link = current;
+    head2 = sortList(head, head2);
+    visit(head2);
 
 
     return (EXIT_SUCCESS);
@@ -29,12 +70,43 @@ void extractMaximum(struct node **head1, struct node **tmp){
     }
 }
 
-void sortList(struct node *head1, struct node head2){
-        struct node *tmp;
+node *sortList(struct node *head1, struct node *head2){
+    struct node *tmp;
 
     while (head1 != NULL){
         extractMaximum(&head1, &tmp);
-        // head2 = push(head2,tmp);
+        head2 = push(head2,tmp->data);
+    }
+
+}
+
+node *push(node *top, int val) {
+    node *new;
+    new = newElement ();
+    new->data = val;
+    new->link = top;
+    top = new;
+    return (top);
+}
+
+node *newElement(){
+    struct node *ptr;
+    ptr = (struct node *) malloc(sizeof (node));
+    if(ptr == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        return NULL;
+    }
+    return ptr;
+}
+
+void visit(node *head){
+    node *ptr;
+    int i = 1;
+    ptr = head;
+
+    while (ptr != NULL){
+        fprintf(stdout,"node (%d) : %d\n", i++, ptr->data);
+        ptr = ptr->link;
     }
 
 }
