@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+
+typedef struct node{
+    int data;
+    struct node *link;
+}node;
+
+// Function Prototypes
+node *newElement();
+node *push(node *top, int val);
+node *pop(node *top, int *val);
+node *listReverse2(node *head1);
+void visit(struct node *head);
+int main(void){
+    struct node *head, *current;
+    struct node *head2;
+    int value, position;
+
+    head = (struct node *) malloc(sizeof (node));
+    if(head == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    head->data = 100;
+    head->link = NULL;
+
+    current = (struct node *) malloc(sizeof (node));
+    if(current == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    current->data = 110;
+    current->link = NULL;
+    head->link = current;
+
+
+    current = (struct node *) malloc(sizeof (node));
+    if(current == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    current->data = 120;
+    current->link = NULL;
+    head->link->link = current;
+    head2 = listReverse2(head);
+    visit(head2);
+
+    return (EXIT_SUCCESS);
+}
+
+
+// First method
+
+node *listReverse(node *head1){
+    node *tmp, *head2 = NULL;
+
+    while (head1 != NULL) {
+        pop (&head1, &tmp);
+        //push (head2, tmp);
+    }
+    return head2;
+}
+
+// Second method ( explicit )
+
+node *listReverse2(node *head1){
+    node *tmp, *head2 = NULL;
+    while (head1 != NULL) {
+
+        // Extract from list 1
+        tmp = head1;
+        head1 = head1->link;
+
+        // Extract from list 2
+        tmp->link = head2;
+        head2 = tmp;
+    }
+
+    return head2;
+}
+
+// Need to be modified to suit the problem
+node *push(node *top, int value) {
+    node *new;
+    new = newElement ();
+    //new->link = val;
+    new->link = top;
+    top = new;
+    return (top);
+}
+
+node *newElement(){
+    struct node *ptr;
+    ptr = (struct node *) malloc(sizeof (node));
+    if(ptr == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        return NULL;
+    }
+    return ptr;
+}
+
+node *pop(node *top, int *val) {
+    node *old;
+
+    if (top != NULL) {
+
+        *val = top->data;
+        old = top;
+        top = top->link;
+        free (old);
+    }
+    return (top);
+}
+void visit(struct node *head){
+    node *ptr;
+    int i = 1;
+    ptr = head;
+
+    while (ptr!=NULL){
+        fprintf(stdout,"Node(%d): %d\n", i++, ptr->data);
+        ptr = ptr->link;
+    }
+}
