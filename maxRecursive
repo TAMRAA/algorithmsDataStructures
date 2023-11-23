@@ -1,0 +1,35 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define N 10
+
+// Recursive Way To Find Maximum
+
+int max(int v[], int l, int r);
+int main(void) {
+
+    int array[N] = {2,3,4,1,2,10,7,6,5,4};
+    int result;
+
+    result = max(array,0,9);
+    fprintf(stdout,"Max = %d", result);
+
+    return EXIT_SUCCESS;
+}
+
+int max(int v[], int l, int r){
+    int c, m1, m2;
+
+    if(l>=r){
+        return v[l];
+    }
+
+    c = (l+r) / 2;
+    m1 = max(v,l,c);
+    m2 = max(v,c+1, r);
+
+    if(m1 > m2){
+        return m1;
+    }else{
+        return m2;
+    }
+}
