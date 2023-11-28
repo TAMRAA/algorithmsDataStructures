@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
+#define strLength 20
 
 typedef struct node{
     struct node *prev;
@@ -10,204 +11,196 @@ typedef struct node{
 }node;
 
 //Function prototypes
-struct node* add_to_empty(struct node *head, int value);
-struct node* add_beginning(struct node *head, int value);
-struct node *add_at_pos(struct node *head, int value, int position);
-struct node* add_at_end (struct node *head, int value);
-struct node* create_list(struct node *head);
-struct node* del_first_node(struct node *head);
-struct node* del_last_node(struct node *head);
-struct node* del_cert_node(struct node *head, int position);
+node *addNode(struct node *head, int value, int position);
+node *deleteNode(struct node *head, int position);
+node *reverse(struct node *head);
+void visit(struct node *head);
+node *newElement();
 
-
-void print_data(struct node *head);
 
 int main(void){
-    int value1, value2, value3, value4;
-    int position1, position2;
-    struct node *head = (struct node *) malloc(sizeof (node));
-    if(head == NULL){
-        fprintf(stdout,"memory allocation failed");
-        exit(EXIT_FAILURE);
-    }
+    node *head = NULL;
+    int value, position;
+    char userInput[strLength];
+    char location[strLength];
 
-  /*  fprintf(stdout,"insert data to initiate the doubly linked list:\n");
-    scanf("%d", &value1);
-    fprintf(stdout,"insert data to add at the beginning of the doubly linked list:\n");
-    scanf("%d", &value2);
-    fprintf(stdout,"insert data to add at the end of the doubly linked list:\n");
-    scanf("%d", &value3);
-    fprintf(stdout,"insert (data and position) to add within the doubly linked list:\n");
-    scanf("%d %d", &value4, &position1);
-    head = add_to_empty(head,value1);
-    head = add_beginning(head, value2);
-    head = add_at_end(head, value3);
-    head = add_at_pos(head,value4,position);*/
-    head = create_list(head);
-    head = del_first_node(head);
-    head = del_last_node(head);
-    fprintf(stdout,"insert position to delete from the doubly linked list:\n");
-    scanf("%d", &position2);
-    head = del_cert_node(head, position2);
+    // Create a new element
 
-    print_data(head);
-    // function add beginning
+    head = newElement();
+    head->data = 100;
+    head->prev = NULL;
+    head->next = NULL;
 
-    exit(EXIT_SUCCESS);
+    do{
+        fprintf(stdout,"Choose operations: add delete reverse visit end\n");
+        scanf("%s", userInput);
+
+        if(!strcmp(userInput,"add")){
+            fprintf(stdout,"Insert value and position of the node to be inserted into the list:\n");
+            scanf("%d %d", &value,&position);
+            head = addNode(head,value,position);
+            visit(head);
+        }
+        else if(!strcmp(userInput,"delete")){
+            fprintf(stdout,"Insert position of the node to be deleted:\n");
+            scanf("%d", &position);
+            head = deleteNode(head,position);
+            visit(head);
+        }
+        else if(!strcmp(userInput,"reverse")){
+            head = reverse(head);
+            visit(head);
+        }
+        else if(!strcmp(userInput,"visit")){
+            visit(head);
+        }
+        else if(!strcmp(userInput,"end")){
+            fprintf(stdout,"App closed :)");
+        }
+        else{
+            fprintf(stderr,"Wrong Input Format!\n");
+        }
+    } while (strcmp(userInput,"end")!=0);
+
+
+    return (EXIT_SUCCESS);
 }
-struct node* add_to_empty(struct node *head,int value) {
-    struct node *ptr = head;
+
+node *newElement(){
+    node *ptr;
+    ptr = (struct node *) malloc (sizeof (node));
+    if(ptr == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        return NULL;
+    }
+    return ptr;
+}
+
+
+// Add node function
+
+node *addNode(struct node *head, int value, int position){
+    node *tmp, *tmp2;
+    node *ptr;
+
+    // Create node
+    ptr = newElement();
+    ptr->data = value;
+    ptr->next = NULL;
+    ptr->prev = NULL;
+
+    // Add to an empty list
     if (head == NULL) {
-        fprintf(stdout, "memory allocation failed");
-        exit(EXIT_FAILURE);
-    }
-    ptr->prev = NULL;
-    ptr->data = value;
-    ptr->next = NULL;
-
-    head = ptr;
-    return head;
-}
-
-struct node* add_beginning(struct node *head, int value){
-    struct node *ptr = (struct node *) malloc(sizeof (node));
-    if(ptr == NULL){
-        fprintf(stdout,"memory allocation failed");
-        exit(EXIT_FAILURE);
-    }
-    if(head==NULL){
-        fprintf(stdout,"the list is empty\n");
-        exit(EXIT_FAILURE);
+        head = ptr;
+        return head;
     }
 
-    ptr->prev = NULL;
-    ptr->data = value;
-    ptr->next = NULL;
-
-    ptr->next = head;
-    head = ptr;
-
-    return head;
-}
-
-struct node* add_at_end (struct node *head, int value){
-    struct node *ptr, *tmp;
-    ptr = (struct node *) malloc (sizeof(node));
-    if(ptr == NULL){
-        fprintf(stdout,"memory allocation failed");
-        exit (EXIT_FAILURE);
+    // Add at the beginning of the list
+    if(position == 1){
+        ptr->next = head;
+        head->prev = ptr;
+        head = ptr;
+        return head;
     }
-    // assigning the node
-    ptr->prev = NULL;
-    ptr->data = value;
-    ptr->next = NULL;
 
+    // Traverse to the right location
     tmp = head;
-
-    // traversal of the linked list
-    while (tmp->next!=NULL){
-        tmp = tmp->next;
-    }
-
-    tmp->next = ptr;
-    ptr->prev = tmp;
-    return head;
-}
-
-void print_data(struct node *head){
-    struct node *ptr = head;
-    int i = 1;
-    while (ptr!=NULL){
-        fprintf(stdout,"data(%d): %d\n",i,ptr->data);
-        i++;
-        ptr = ptr->next;
-    }
-
-}
-
-struct node *add_at_pos(struct node *head, int value, int position){
-    struct node *ptr = (struct node *) malloc(sizeof (node));
-    struct node *tmp = head, *tmp2 = NULL;
-    ptr = add_to_empty(ptr,value);
-
     position--;
-
-    while (position!=1){
+    while (position != 1 && tmp->next != NULL){
         tmp = tmp->next;
         position--;
     }
-    tmp2 = tmp->next;
-    tmp->next = ptr;
-    tmp2->prev = ptr;
-    ptr->next = tmp2;
-    ptr->prev = tmp;
 
-    return head;
+    // Add to the end
+    if(tmp->next == NULL){
+        tmp->next = ptr;
+        ptr->prev = tmp;
 
-}
+        // Add in a certain position
+    } else {
 
-struct node* create_list(struct node *head){
-    int n, data, i;
-    fprintf(stdout,"insert the number of node:\n");
-    scanf("%d", &n);
-    fprintf(stdout,"insert data of node(1):\n");
-    scanf("%d", &data);
-    head = add_to_empty(head, data);
-
-    for(i=1;i<n;i++){
-        fprintf(stdout,"insert data of node(%d):\n", (i+1));
-        scanf("%d", &data);
-        head = add_at_end(head,data);
+        // Update links
+        tmp2 = tmp->next;
+        tmp->next = ptr;
+        tmp2->prev = ptr;
+        ptr->prev = tmp;
+        ptr->next = tmp2;
     }
+
     return head;
 }
 
-struct node* del_first_node(struct node *head){
-    if(head == NULL){
-        fprintf(stdout,"The list is empty");
-        exit(EXIT_FAILURE);
+node *deleteNode(struct node *head, int position){
+    node *ptr, *ptr2;
+
+    // Single Node
+    if(head->next == NULL){
+        free(head);
+        head = NULL;
+        return head;
     }
-    head = head->next;
-    free(head->prev);
-    head->prev = NULL;
-    return head;
-}
-struct node* del_last_node(struct node *head){
-    struct node *ptr1, *ptr2;
-    ptr1 = head;
-    while (ptr1->next!=NULL){
-        ptr1 = ptr1->next;
-    }
-    ptr2 = ptr1->prev;
-    ptr2->next = NULL;
-
-    free(ptr1);
-    ptr2 = NULL;
-
-    return head;
-}
-struct node* del_cert_node(struct node *head, int position){
-    struct node *ptr1, *ptr2;
-    ptr1 = head;
 
     if(position == 1){
-       head = del_first_node(head);
-       return head;
-   }
-    position--;
-    while (position>1){
-       ptr1 = ptr1->next;
-       position--;
-    }
-    if(ptr1->next == NULL){
-        del_last_node(head);
+        ptr = head->next;
+        ptr->prev = NULL;
+
+        fprintf(stdout,"First node is deleted :)\n");
+        free(head);
+        head = ptr;  // Update head to the new head
         return head;
-    }else {
-        ptr2 = ptr1->prev;
-        ptr2->next = ptr1->next;
-        ptr1->next->prev = ptr2;
-        free(ptr1);
-        ptr1 = NULL;
-        return head;
+
+    } else {
+        ptr2 = head;
+        // Traverse to the correct position
+        while(position != 1){
+            ptr2 = ptr2->next;
+            position--;
+        }
+
+        // Adjust Links
+        ptr = ptr2->prev;
+        ptr->next = ptr2->next;
+        if (ptr2->next != NULL) {
+            ptr2->next->prev = ptr;
+        }
+
+        // Free pointer
+        free(ptr2);
     }
+
+    return head;
+}
+
+
+void visit(struct node *head){
+    node *ptr;
+    int i = 1;
+
+    if(head == NULL){
+        fprintf(stderr,"List is empty\n");
+        return;
+    }
+    ptr = head;
+    while ( ptr!= NULL){
+        fprintf(stdout,"node(%d): %d\n", i,ptr->data);
+        ptr = ptr->next;
+        i++;
+    }
+}
+
+node *reverse(struct node *head){
+    node *ptr1 = head;
+    node *ptr2 = ptr1->next;
+
+    ptr1->next = NULL;
+    ptr1->prev = ptr2;
+
+    while(ptr2 != NULL){
+        ptr2->prev = ptr2->next;
+        ptr2->next = ptr1;
+        ptr1 = ptr2;
+        ptr2 = ptr2->prev;
+    }
+    head = ptr1;
+    return head;
 }
