@@ -8,111 +8,104 @@
 
 typedef struct node{
     int data;
-    struct node *next;
+    struct node *link;
 }node;
 
 // Function Prototypes
-void listOperations();
-node *push(struct node *top, int value);
-node *pop(struct node *top, int *status, int *data);
-node *visit(struct node *top);
-void read(int *data);
+node *newElement();
+node *push(struct node *top, int val);
+node *pop(struct node *top, int *status);
+void visit(struct node *top);
 
-// Main function
+// Main Function
 int main(void){
-    node *Top = NULL;
-    char choice[MAX];
-    int value, status;
+    node *top = NULL;
+    int status, value;
+    char userInput[MAX];
 
     do{
-        fprintf(stdout,"Choose an operation: ");
-        listOperations();
-        scanf("%s", choice);
+        fprintf(stdout,"Which operation: push pop visit end \n");
+        scanf("%s", userInput);
 
-        if(!strcmp(choice,"push")){
-            // function push
-            read(&value);
-            Top = push(Top, value);
-            Top = visit(Top);
+        if(!strcmp(userInput,"push")){
+
+            // Add value to stack
+            fprintf(stdout,"insert value to push it into the STACK:\n");
+            scanf("%d", &value);
+
+            top = push(top,value);
+            visit(top);
         }
-        else if(!strcmp(choice,"pop")){
-            // function pop
-            Top = pop(Top, &status, &value);
-            if(status){
-                fprintf(stdout,"%d has been popped successfully\n", value);
-                Top = visit(Top);
+        else if(!strcmp(userInput,"pop")){
+            top = pop(top, &status);
+            if(status == SUCCESS){
+                visit(top);
             }else{
-                fprintf(stdout,"List is empty\n");
+                fprintf(stdout,"Stack is empty\n");
             }
         }
-        else {
-            if (!strcmp(choice, "visit")) {
-                // function traversal
-                Top = visit(Top);
-
-            } else {
-                if (strcmp(choice, "end") != 0) {
-                    fprintf(stdout, "Wrong input\n");
-                }
-            }
+        else if(!strcmp(userInput,"visit")){
+            visit(top);
+        }
+        else if(!strcmp(userInput,"end")){
+            fprintf(stdout,"App closed");
+        }
+        else{
+            fprintf(stdout,"Wrong Input, Try Again\n");
         }
 
-    } while(strcmp(choice,"end")!=0);
+    } while (strcmp(userInput,"end") != 0);
 
-    return (EXIT_SUCCESS);
-}
-void listOperations(){
-    fprintf(stdout,"push, pop, visit or end\n");
 }
 
-node *push(struct node *top, int value){
-
-    node *ptr = (struct node *) malloc (sizeof (node));
+node *newElement(){
+    node *ptr;
+    ptr = (struct node *) malloc (sizeof (node));
     if(ptr == NULL){
-        fprintf(stdout,"Memory allocation failed\n");
-        exit(EXIT_FAILURE);
+        fprintf(stderr,"Memory allocation failed");
+        return NULL;
     }
-    ptr->data = value;
-    ptr->next = top;
+    return ptr;
+}
+
+node *push(struct node *top, int val){
+    node *ptr;
+
+    ptr = newElement();
+    ptr->data = val;
+    ptr->link = NULL;
+
+    ptr->link = top;
     top = ptr;
 
-    return (top);
+    return top;
 }
 
-node *pop(struct node *top, int *status, int *data){
+void visit(struct node *top){
+    node *ptr;
+
+
+    ptr = top;
+    fprintf(stdout,"Top -> ");
+
+    while (ptr!= NULL){
+        fprintf(stdout,"%d -> ",ptr->data);
+        ptr = ptr->link;
+    }
+    fprintf(stdout,"NULL\n");
+}
+
+node *pop(struct node *top, int *status){
     node *ptr;
 
     if(top != NULL){
-        ptr = top;
         *status = SUCCESS;
-        *data = ptr->data;
+        ptr = top->link;
+        free(top);
+        return ptr;
 
-        top = top->next;
-        free(ptr);
-    } else{
+    }else{
         *status = FAILURE;
     }
-    return (top);
-}
-
-node *visit(struct node *top){
-    node *ptr;
-
-    ptr = top;
-
-    fprintf(stdout,"Top -> ");
-    while (ptr != NULL){
-        fprintf(stdout,"%d -> ", ptr->data);
-        ptr = ptr->next;
-    }
-    fprintf(stdout,"NULL\n");
-
-    ptr = NULL;
-
-    return (top);
-}
-
-void read(int *data){
-    fprintf(stdout,"Insert value to store:\n");
-    scanf("%d", data);
+    return top;
 }
