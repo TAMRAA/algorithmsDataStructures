@@ -22,7 +22,6 @@ int main(void){
     node *head = NULL;
     int value, position;
     char userInput[strLength];
-    char location[strLength];
 
     // Create a new element
 
@@ -131,7 +130,7 @@ node *addNode(struct node *head, int value, int position){
 }
 
 node *deleteNode(struct node *head, int position){
-    node *ptr, *ptr2;
+    node *tmp, *tmp2;
 
     // Single Node
     if(head->next == NULL){
@@ -140,32 +139,34 @@ node *deleteNode(struct node *head, int position){
         return head;
     }
 
+    // First Node
+
     if(position == 1){
-        ptr = head->next;
-        ptr->prev = NULL;
+        tmp = head->next;
+        tmp->prev = NULL;
 
         fprintf(stdout,"First node is deleted :)\n");
         free(head);
-        head = ptr;  // Update head to the new head
+        head = tmp;  // Update head to the new head
         return head;
 
     } else {
-        ptr2 = head;
+        tmp2 = head;
         // Traverse to the correct position
         while(position != 1){
-            ptr2 = ptr2->next;
+            tmp2 = tmp2->next;
             position--;
         }
 
-        // Adjust Links
-        ptr = ptr2->prev;
-        ptr->next = ptr2->next;
-        if (ptr2->next != NULL) {
-            ptr2->next->prev = ptr;
+        // Delete certain location and the last node case
+        tmp = tmp2->prev;
+        tmp->next = tmp2->next;
+        if (tmp2->next != NULL) {
+            tmp2->next->prev = tmp;
         }
 
         // Free pointer
-        free(ptr2);
+        free(tmp2);
     }
 
     return head;
