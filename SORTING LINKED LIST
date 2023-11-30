@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+typedef struct node{
+    int data;
+    struct node *next;
+}node;
+
+
+//Function prototypes
+node *newElement();
+void *visit(struct node *head);
+node *addBeginning(struct node *head, int value);
+node *extractMax(struct node *head);
+node *push(struct node *head, int value);
+
+
+// Main Function
+int main(void){
+    node *head = NULL, *tmp = NULL;
+    node *head2 = NULL;
+
+    head = newElement();
+    head->data = 110;
+    head->next = NULL;
+
+    head = addBeginning(head,190);
+    head = addBeginning(head,170);
+    head = addBeginning(head,130);
+
+    visit(head);
+    
+    // I need either sorting algorithm or finding max, exchange then pop
+
+    
+
+
+    return (EXIT_SUCCESS);
+}
+
+node *newElement(){
+    node *ptr;
+
+    ptr = (struct node *) malloc(sizeof (node));
+    if(ptr == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        return NULL;
+    }
+    return ptr;
+}
+
+node *addBeginning(struct node *head, int value){
+    node *ptr;
+
+    ptr = newElement();
+    ptr->data = value;
+    ptr->next = NULL;
+
+    ptr->next = head;
+    head = ptr;
+
+    return head;
+}
+
+void *visit(struct node *head){
+    node *ptr = head;
+    int i = 1;
+
+    while (ptr != NULL){
+        fprintf(stdout,"node(%d): %d\n",i, ptr->data);
+        ptr = ptr->next;
+        i++;
+    }
+}
+
+node *extractMax(struct node *head){
+    node *ptr = head, *max = NULL;
+
+    while (ptr != NULL){
+        if(max == NULL || ptr->data > max->data){
+            max = ptr;
+        }
+        ptr = ptr->next;
+    }
+    return max;
+}
+
+node *push(struct node *head, int value){
+    node *ptr;
+    ptr = newElement();
+    ptr->data = value;
+    ptr->next = NULL;
+
+
+    if(head == NULL){
+        head = ptr;
+    }else{
+        ptr->next = head;
+        head = ptr;
+    }
+    return head;
+}
