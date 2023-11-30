@@ -1,99 +1,50 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
 
 typedef struct node{
     int data;
-    struct node *link;
+    struct node *next;
 }node;
 
-// Function Prototypes
+
+//Function prototypes
 node *newElement();
-node *push(node *top, int val);
-node *pop(node *top, int *val);
-node *listReverse2(node *head1);
-void visit(struct node *head);
+void *visit(struct node *head);
+node *addBeginning(struct node *head, int value);
+node *pop(struct node *head, int *value);
+node *push(struct node *head, int value);
+node *reverseList(struct node *head);
+
+
+// Main Function
 int main(void){
-    struct node *head, *current;
-    struct node *head2;
-    int value, position;
+    node *head = NULL;
+    node *head2 = NULL;
 
-    head = (struct node *) malloc(sizeof (node));
-    if(head == NULL){
-        fprintf(stderr,"Memory allocation failed");
-        exit(EXIT_FAILURE);
-    }
+    head = newElement();
+    head->data = 130;
+    head->next = NULL;
 
-    head->data = 100;
-    head->link = NULL;
+    head = addBeginning(head,120);
+    head = addBeginning(head,110);
+    head = addBeginning(head,100);
 
-    current = (struct node *) malloc(sizeof (node));
-    if(current == NULL){
-        fprintf(stderr,"Memory allocation failed");
-        exit(EXIT_FAILURE);
-    }
-    current->data = 110;
-    current->link = NULL;
-    head->link = current;
+    fprintf(stdout,"Input List:\n");
+    visit(head);
+
+    head2 = reverseList(head);
 
 
-    current = (struct node *) malloc(sizeof (node));
-    if(current == NULL){
-        fprintf(stderr,"Memory allocation failed");
-        exit(EXIT_FAILURE);
-    }
-    current->data = 120;
-    current->link = NULL;
-    head->link->link = current;
-    head2 = listReverse2(head);
+    fprintf(stdout,"Output List:\n");
     visit(head2);
 
     return (EXIT_SUCCESS);
 }
 
-
-// First method
-
-node *listReverse(node *head1){
-    node *tmp, *head2 = NULL;
-
-    while (head1 != NULL) {
-        pop (&head1, &tmp);
-        //push (head2, tmp);
-    }
-    return head2;
-}
-
-// Second method ( explicit )
-
-node *listReverse2(node *head1){
-    node *tmp, *head2 = NULL;
-    while (head1 != NULL) {
-
-        // Extract from list 1
-        tmp = head1;
-        head1 = head1->link;
-
-        // Extract from list 2
-        tmp->link = head2;
-        head2 = tmp;
-    }
-
-    return head2;
-}
-
-// Need to be modified to suit the problem
-node *push(node *top, int value) {
-    node *new;
-    new = newElement ();
-    //new->link = val;
-    new->link = top;
-    top = new;
-    return (top);
-}
-
 node *newElement(){
-    struct node *ptr;
+    node *ptr;
+
     ptr = (struct node *) malloc(sizeof (node));
     if(ptr == NULL){
         fprintf(stderr,"Memory allocation failed");
@@ -102,25 +53,63 @@ node *newElement(){
     return ptr;
 }
 
-node *pop(node *top, int *val) {
-    node *old;
-
-    if (top != NULL) {
-
-        *val = top->data;
-        old = top;
-        top = top->link;
-        free (old);
-    }
-    return (top);
-}
-void visit(struct node *head){
+node *addBeginning(struct node *head, int value){
     node *ptr;
-    int i = 1;
-    ptr = head;
 
-    while (ptr!=NULL){
-        fprintf(stdout,"Node(%d): %d\n", i++, ptr->data);
-        ptr = ptr->link;
+    ptr = newElement();
+    ptr->data = value;
+    ptr->next = NULL;
+
+    ptr->next = head;
+    head = ptr;
+
+    return head;
+}
+
+void *visit(struct node *head){
+    node *ptr = head;
+    int i = 1;
+
+    while (ptr != NULL){
+        fprintf(stdout,"node(%d): %d\n",i, ptr->data);
+        ptr = ptr->next;
+        i++;
     }
+}
+
+node *reverseList(struct node *head){
+    node *head2 = NULL, *tmp = NULL;
+    int value;
+
+    while (head != NULL){
+        head = pop(head,&value);
+        head2 = push(head2,value);
+    }
+
+    return head2;
+}
+
+node *pop(struct node *head, int *value){
+    node *ptr = head->next;
+    *value = head->data;
+    free(head);
+    head = ptr;
+
+    return head;
+}
+
+node *push(struct node *head, int value){
+    node *ptr;
+    ptr = newElement();
+    ptr->data = value;
+    ptr->next = NULL;
+
+
+    if(head == NULL){
+        head = ptr;
+    }else{
+        ptr->next = head;
+        head = ptr;
+    }
+    return head;
 }
