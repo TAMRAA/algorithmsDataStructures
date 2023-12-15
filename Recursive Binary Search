@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define N 10
+
+
+// Function Prototypes
+int binarySearch(int v[], int l, int r, int key);
+
+int main() {
+    int array[N] = {1,2,3,4,5,6,7,8,9,10};
+    int l = 0, r = N-1;
+    int key, result;
+
+    fprintf(stdout,"insert key:\n");
+    scanf("%d", &key);
+
+    result = binarySearch(array,l,r,key);
+    if(result!= -1){
+        fprintf(stdout,"found at index %d", result+1);
+    }else{
+        fprintf(stdout,"%d is not in the array", key);
+    }
+
+}
+
+int binarySearch(int v[], int l, int r, int key) {
+
+    int c;
+
+    // Search failed
+
+    if (l > r) {
+        return -1;
+    }
+
+    c = (l + r) / 2;
+
+    if (key == v[c]) {
+        // Key found at index c
+        return c;
+    } else if (key < v[c]) {
+        // Search in the left half
+        return binarySearch(v, l, c - 1, key);
+    } else {
+        // Search in the right half
+        return binarySearch(v, c + 1, r, key);
+    }
+
+}
