@@ -2,40 +2,54 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 // Function prototypes
 int fibonacci(int n, int *known);
 
 // Main function
+int main() {
+    int *known, i, n;
 
-int main(){
-    int *known, i , n;
-
-    fprintf(stdout,"Insert n:\n");
+    // Prompt the user to input the value of n
+    fprintf(stdout, "Insert n:\n");
     scanf("%d", &n);
-    known = (int *) malloc((n+1)*sizeof (int));
-    if(known == NULL){
-        fprintf(stderr,"Memory allocation failed");
+
+    // Allocate memory for the array 'known' to store Fibonacci values
+    known = (int *)malloc((n + 1) * sizeof(int));
+
+    // Check if memory allocation is successful
+    if (known == NULL) {
+        fprintf(stderr, "Memory allocation failed");
         exit(EXIT_FAILURE);
     }
 
-    for(i=0;i<=n;i++){
+    // Initialize the 'known' array with -1
+    for (i = 0; i <= n; i++) {
         known[i] = -1;
     }
-    fprintf(stdout,"Fibonacci %d-th term = %d\n", n, fibonacci(n, known));
+
+    // Print the Fibonacci nth term using the recursive function
+    fprintf(stdout, "Fibonacci %d-th term = %d\n", n, fibonacci(n, known));
+
+    // Free the allocated memory
     free(known);
 
+    // Return success status
     return EXIT_SUCCESS;
 }
 
-int fibonacci(int n, int *known){
-    if(known[n] < 0){
-        if(n==0 || n == 1){
+// Recursive function to calculate Fibonacci number for the given index 'n'
+int fibonacci(int n, int *known) {
+    // Check if the Fibonacci value for 'n' is not already calculated
+    if (known[n] < 0) {
+        // Base case: Fibonacci value for 0 and 1 is n
+        if (n == 0 || n == 1) {
             known[n] = n;
-        }else{
-            known[n] = fibonacci(n-1,known) + fibonacci(n-2, known);
+        } else {
+            // Recursive case: Calculate Fibonacci value for 'n' using previous two values
+            known[n] = fibonacci(n - 1, known) + fibonacci(n - 2, known);
         }
     }
 
+    // Return the calculated Fibonacci value for 'n'
     return known[n];
 }
