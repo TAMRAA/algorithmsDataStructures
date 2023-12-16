@@ -68,18 +68,20 @@ int partition(int *A, int l, int r) {
     int i, j, pivot;
 
     // Initialize pointers and choose the pivot element
-    i = l - 1;
+    i = l;
     j = r;
+
+    // Pivot the last element
     pivot = A[r];
 
     // Perform the partitioning
     while (i < j) {
-        // Move i to the right until I find an element A[i] >= pivot
+        // Move i to the right until we find an element A[i] >= pivot
         while (i < r && A[i] < pivot) {
             i++;
         }
 
-        // Move j to the left until i find an element A[j] < pivot
+        // Move j to the left until we find an element A[j] < pivot
         while (j > l && A[j] >= pivot) {
             j--;
         }
@@ -87,8 +89,6 @@ int partition(int *A, int l, int r) {
         // Swap A[i] and A[j] if i < j
         if (i < j) {
             swap(A, i, j);
-            i++;
-            j--;
         }
     }
 
