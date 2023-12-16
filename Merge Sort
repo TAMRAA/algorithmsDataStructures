@@ -63,15 +63,15 @@ void r_mergeSort(int *A, int *B, int l, int r) {
     // Find the middle point of the array
     c = (l + r) / 2;
 
-    // Recursively sort the first and second halves
+    // Recursively divide the first and second halves
     r_mergeSort(A, B, l, c);
     r_mergeSort(A, B, c + 1, r);
 
-    // Merge the sorted halves
+    // Merge sort the 2 arrays on the way back
     merge(A, B, l, c, r);
 }
 
-// Merge function to combine two sorted halves
+// Merge function to Sort the 2 arrays on the way back
 void merge(int *A, int *B, int l, int c, int r) {
     int i, j, k;
 
