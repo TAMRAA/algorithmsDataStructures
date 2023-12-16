@@ -19,7 +19,7 @@ int main(void) {
 
 
     // Merge both arrays into a single array
-    for (i = 0; i < strLength; ++i) {
+    for (i = 0; i < strLength; i++) {
         mergedArray[i] = array1[i];
         mergedArray[i + strLength] = array2[i];
     }
@@ -75,10 +75,14 @@ void r_mergeSort(int *A, int *B, int l, int r) {
 void merge(int *A, int *B, int l, int c, int r) {
     int i, j, k;
 
-    // Compare and merge, use <= to make the sorting stable
 
-    // Copy the first tail
-    for (i = l, j = c + 1, k = l; i <= c && j <= r;) {
+    i = l;
+    j = c+1;
+    k = l;
+
+
+    // use <= to make the sorting stable
+    while ( i <= c && j <= r ) {
         if (A[i] <= A[j])
             B[k++] = A[i++];
         else
