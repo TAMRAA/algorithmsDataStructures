@@ -13,7 +13,7 @@ void mergeSort(int *A, int N);
 // Main Function
 int main(void) {
     int i;
-    int array1[strLength] = {1, 3, 5, 7, 9,11};
+    int array1[strLength] = {1, 3, 5, 7, 9};
     int array2[strLength] = {2, 4, 6, 8, 10};
     int mergedArray[strLength*2];
 
