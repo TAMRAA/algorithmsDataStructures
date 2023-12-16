@@ -1,103 +1,46 @@
-#include <stdlib.h>
 #include <stdio.h>
-
-#define strLength 5
-
-// Function prototypes
-
-void merge(int *A, int *B, int l, int c, int r);
-void r_mergeSort(int *A, int *B, int l, int r);
-void mergeSort(int *A, int N);
+#include <stdlib.h>
+#define N 4
 
 
-// Main Function
-int main(void) {
+// Function Prototype
+void Merge(int a[], int b[], int c[], int n);
+// Main function
+int main (void){
     int i;
-    int array1[strLength] = {1, 3, 5, 7, 9};
-    int array2[strLength] = {2, 4, 6, 8, 10};
-    int mergedArray[strLength*2];
+    int arr1[N] = {2,8,15,18};
+    int arr2[N] = {5,9,12,17};
+    int finalArray[N+N]={0};
+    Merge(arr1,arr2,finalArray,N);
 
-
-    // Merge both arrays into a single array
-    for (i = 0; i < strLength; i++) {
-        mergedArray[i] = array1[i];
-        mergedArray[i + strLength] = array2[i];
+    for(i=0;i<N+N;i++){
+        fprintf(stdout,"%d ", finalArray[i]);
     }
 
-    // Apply merge sort to the merged array
-    mergeSort(mergedArray, strLength*2);
+    return (EXIT_SUCCESS);
+}
 
-    fprintf(stdout, "Sorted array: ");
+// Function Declaration
+void Merge(int a[], int b[], int c[], int n){
+    int i = 0, j = 0, k = 0;
 
-    for (i = 0; i < strLength*2; i++) {
-        fprintf(stdout, "%d ", mergedArray[i]);
+    // Compare and copy elements
+
+    while(i < n && j < n){
+        if(a[i] < b[j]){
+            c[k++] = a[i++];
+        }else{
+            c[k++] = b[j++];
+        }
     }
 
-    return EXIT_SUCCESS;
-}
+    // Copy the remaining elements if they exist
 
-// Main merge sort function
-void mergeSort(int *A, int N){
-
-    // Allocate temporary array for merging
-    int *B = (int *) malloc (N * sizeof(int));
-
-    // Initialize the range for sorting
-    int l = 0, r = N - 1;
-
-    // Start the recursive merge sort
-    r_mergeSort(A, B, l, r);
-
-    // Free dynamically allocated memory
-    free(B);
-}
-
-// Recursive merge sort function
-void r_mergeSort(int *A, int *B, int l, int r) {
-    int c;
-
-    // Base case: if the range is empty or has one element, it's already sorted
-    if (l >= r)
-        return;
-
-    // Find the middle point of the array
-    c = (l + r) / 2;
-
-    // Recursively sort the first and second halves
-    r_mergeSort(A, B, l, c);
-    r_mergeSort(A, B, c + 1, r);
-
-    // Merge the sorted halves
-    merge(A, B, l, c, r);
-}
-
-// Merge function to combine two sorted halves
-void merge(int *A, int *B, int l, int c, int r) {
-    int i, j, k;
-
-
-    i = l;
-    j = c+1;
-    k = l;
-
-
-    // use <= to make the sorting stable
-    while ( i <= c && j <= r ) {
-        if (A[i] <= A[j])
-            B[k++] = A[i++];
-        else
-            B[k++] = A[j++];
+    for(;i<n;i++){
+        c[k++] = a[i];
+    }
+    for(;j<n;j++){
+        c[k++] = b[j];
     }
 
-    // Copy the remaining elements if any in the first half
-    while (i <= c)
-        B[k++] = A[i++];
-
-    // Copy the remaining elements if any in the second half
-    while (j <= r)
-        B[k++] = A[j++];
-
-    // Copy the merged array back to the original array
-    for (k = l; k <= r; k++)
-        A[k] = B[k];
 }
