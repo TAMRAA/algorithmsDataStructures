@@ -9,6 +9,7 @@ void r_quickSort(int *A, int l, int r);
 int partition(int *A, int l, int r);
 void swap(int *v, int n1, int n2);
 
+
 // Main Function
 int main() {
     // Initialize the array with values
@@ -22,7 +23,7 @@ int main() {
     }
 
     // Call the quickSort function to sort the array
-    quickSort(arr, size - 1);
+    quickSort(arr, size);
 
     // Print the sorted array
     printf("\nSorted array: ");
@@ -39,7 +40,7 @@ void quickSort(int *A, int N) {
 
     // Set the initial values for the range to be sorted
     l = 0;
-    r = N;
+    r = N-1;
 
     // Call the recursive quickSort function
     r_quickSort(A, l, r);
@@ -49,15 +50,17 @@ void quickSort(int *A, int N) {
 void r_quickSort(int *A, int l, int r) {
     int c;
 
-    // Check if there is more than one element in the array
-    if (l < r) {
-        // Divide the array into two partitions
-        c = partition(A, l, r);
 
-        // Recursively sort the left and right partitions
-        r_quickSort(A, l, c - 1);
-        r_quickSort(A, c + 1, r);
+    if (l >= r) {
+        return;
     }
+
+    // Divide the array into two partitions
+    c = partition(A, l, r);
+
+    // Recursively sort the left and right partitions
+    r_quickSort(A, l, c - 1);
+    r_quickSort(A, c + 1, r);
 }
 
 // Partition Function
@@ -102,4 +105,3 @@ void swap(int *v, int n1, int n2) {
     v[n1] = v[n2];
     v[n2] = temp;
 }
-
