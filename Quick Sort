@@ -1,64 +1,105 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define N 9
 
+#define size 8
 
-// Function Prototype
-int partition(int a[], int l, int h);
-void quickSort(int a[],int l, int h);
-void swap(int *a, int *b);
-// Main function
-int main (void){
-    int array[N] = {6,5,8,9,3,10,15,12,16};
+// Function Prototypes
+void quickSort(int *A, int N);
+void r_quickSort(int *A, int l, int r);
+int partition(int *A, int l, int r);
+void swap(int *v, int n1, int n2);
+
+// Main Function
+int main() {
+    // Initialize the array with values
+    int arr[size] = {12, 4, 5, 6, 7, 3, 1, 15};
     int i;
-    
-    quickSort(array,0,N-1);
-    for(i=0;i<N-1;i++){
-        fprintf(stdout,"%d ",array[i]);
+
+    // Print the original array
+    printf("Original array: ");
+    for (i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
     }
 
-    return (EXIT_SUCCESS);
+    // Call the quickSort function to sort the array
+    quickSort(arr, size - 1);
+
+    // Print the sorted array
+    printf("\nSorted array: ");
+    for (i = 0; i < size; i++) {
+        printf("%d ", arr[i]);
+    }
+
+    return EXIT_SUCCESS;
 }
 
-// Quick Sort
+// Wrapper Function
+void quickSort(int *A, int N) {
+    int l, r;
 
-int partition(int a[], int l, int h){
-    int pivot, i, j;
+    // Set the initial values for the range to be sorted
+    l = 0;
+    r = N;
 
-    pivot = a[l];
-    i = l;
-    j = h;
+    // Call the recursive quickSort function
+    r_quickSort(A, l, r);
+}
 
-    while (i < j){
-        do{
+// Recursive QuickSort Function
+void r_quickSort(int *A, int l, int r) {
+    int c;
+
+    // Check if there is more than one element in the array
+    if (l < r) {
+        // Divide the array into two partitions
+        c = partition(A, l, r);
+
+        // Recursively sort the left and right partitions
+        r_quickSort(A, l, c - 1);
+        r_quickSort(A, c + 1, r);
+    }
+}
+
+// Partition Function
+int partition(int *A, int l, int r) {
+    int i, j, pivot;
+
+    // Initialize pointers and choose the pivot element
+    i = l - 1;
+    j = r;
+    pivot = A[r];
+
+    // Perform the partitioning
+    while (i < j) {
+        // Move i to the right until I find an element A[i] >= pivot
+        while (i < r && A[i] < pivot) {
             i++;
-        } while (a[i]<=pivot);
+        }
 
-        do{
+        // Move j to the left until i find an element A[j] < pivot
+        while (j > l && A[j] >= pivot) {
             j--;
-        } while (a[j]>pivot);
+        }
 
-        if(i<j){
-            swap(&a[i],&a[j]);
+        // Swap A[i] and A[j] if i < j
+        if (i < j) {
+            swap(A, i, j);
+            i++;
+            j--;
         }
     }
-    swap(&a[l],&a[j]);
-    return j;
+
+    // Swap the pivot element with the correct position in the array
+    swap(A, i, r);
+    return i;
 }
 
-void quickSort(int a[],int l, int h){
-    int j;
-    if(l < h){
-        j = partition(a,l,h);
-        quickSort(a,l,j);
-        quickSort(a,j+1,h);
-    }
-}
-
-void swap(int *a, int *b){
-    int tmp;
-    tmp = *a;
-    *a = *b;
-    *b = tmp;
+// Swap Function
+void swap(int *v, int n1, int n2) {
+    // Swap two elements in the array
+    int temp;
+    temp = v[n1];
+    v[n1] = v[n2];
+    v[n2] = temp;
 }
 
