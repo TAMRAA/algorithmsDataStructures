@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define DIM 30
+
+
+// Function Prototypes
+int simpleArrangements(int *val , int *mark, int *sol, int n , int k , int count, int pos);
+int repetitionArrangements(int *val , int *mark, int *sol, int n , int k , int count, int pos);
+
+// Main Function
+int main(void){
+
+    int *val, *mark, *sol;
+    char userInput[DIM];
+    int totalCount;
+    int n = 3;
+    int k = 2;
+
+    val = (int *) malloc(n*sizeof (int));
+    mark = (int *) malloc(n*sizeof (int));
+    sol = (int *) malloc(k*sizeof (int));
+
+    if(val == NULL || mark == NULL || sol == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        exit(EXIT_SUCCESS);
+    }
+
+    for(int i = 0; i < n ; i++){
+        val[i] = i+1;
+    }
+
+    fprintf(stdout,"simpleArrangement OR repetitionArrangement?\n");
+    scanf("%s", userInput);
+
+    if(!strcmp(userInput,"simpleArrangement")){
+        totalCount = simpleArrangements(val,mark,sol,n,k,0,0);
+    }else if(!strcmp(userInput,"repetitionArrangement")){
+        totalCount = repetitionArrangements(val,mark,sol,n,k,0,0);
+    }else{
+        fprintf(stderr,"Wrong Input!!");
+        return EXIT_FAILURE;
+    }
+
+
+    fprintf(stdout,"Total combinations = %d", totalCount);
+
+    free(val);
+    free(mark);
+    free(sol);
+
+    return EXIT_SUCCESS;
+}
+
+// Function declarations
+int simpleArrangements(int *val , int *mark, int *sol, int n , int k , int count, int pos){
+    int i;
+    if(pos >= k){
+        for(i = 0 ; i < k; i++){
+            fprintf(stdout,"%d", sol[i]);
+        }
+
+        fprintf(stdout,"\n");
+
+        return count + 1;
+    }
+
+    for( i = 0 ; i < n ; i++){
+
+        if(mark[i] == 0){
+            mark[i] = 1;
+            sol[pos] = val[i];
+            count = simpleArrangements(val, mark, sol, n , k, count , pos+1);
+            mark[i] = 0;
+        }
+    }
+
+    return count;
+}
+
+int repetitionArrangements(int *val , int *mark, int *sol, int n , int k , int count, int pos){
+    int i;
+    if(pos >= k){
+        for(i = 0 ; i < k; i++){
+            fprintf(stdout,"%d", sol[i]);
+        }
+
+        fprintf(stdout,"\n");
+
+        return count + 1;
+    }
+
+    for( i = 0 ; i < n ; i++){
+
+        sol[pos] = val[i];
+        count = simpleArrangements(val, mark, sol, n , k, count , pos+1);
+
+    }
+
+    return count;
+}
