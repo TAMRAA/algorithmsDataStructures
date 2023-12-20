@@ -1,0 +1,100 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// CODE EXPLANATION
+/*  Memory Allocation: Allocates memory for arrays of nodes (val) and solutions (sol).
+ *
+    Initialization of Nodes: Dynamically allocates memory for each node's choices based on the numChoice field.
+
+    Multiplication Principle Function Call: Calls the mult-princ function with the allocated arrays.
+
+    Prints Total Combinations: Prints the total number of combinations found by the mult-princ function.
+
+    Memory De-allocation: Frees the dynamically allocated memory to prevent memory leaks.
+
+ FUNCTION multiplication principle (node *val, int *sol, int n, int count, int pos)
+
+ * Base Case: If pos is greater than or equal to n, it means a complete combination has been formed.
+ * The function prints the current combination and increments the count.
+    Recursive Case: For each choice at the current position (pos),
+    the function sets the choice in the sol array and recursively calls itself for the next position (pos + 1).
+    Backtracking: The function tries all choices at the current position and explores all possible combinations.
+    Summary:
+    The code essentially generates and prints all possible combinations of choices for the given nodes,
+    using a recursive approach. The multiplication principle is applied by exploring all possible choices at each position.
+    The code emphasizes dynamic memory allocation for flexibility in handling nodes with different numbers of choices.
+
+*/
+
+
+
+
+
+
+
+
+
+// Define a structure to represent a node in a combinatorial structure.
+// Each node has two fields:
+typedef struct node {
+    // an integer representing the number of choices available for this node.
+    int numChoice;
+    // a dynamically allocated array of integers representing the actual choices.
+    int *choices;
+} node;
+
+
+// Function Prototypes
+int mult_princ(node *val, int *sol, int n, int count, int pos);
+
+// Main Function
+int main() {
+
+    // Assuming n is the number of elements
+    int n = 5, totalCount;
+    node *val;
+    int *sol;
+
+    // Array of nodes
+
+    val = malloc(n * sizeof(node));
+
+    // Assuming each node has a field 'n_choice'
+    for (int i = 0; i < n; i++)
+        val[i].choices = malloc(val[i].numChoice * sizeof(int));
+
+    sol = malloc(n * sizeof(int));
+
+    // Call the multiplication principle function
+    totalCount = mult_princ(val, sol, n, 0, 0);
+
+    printf("Total combinations: %d\n", totalCount);
+
+    // Free allocated memory
+    for (int i = 0; i < n; i++)
+        free(val[i].choices);
+    free(val);
+    free(sol);
+
+    return EXIT_SUCCESS;
+}
+
+
+// Multiplication principle function
+int mult_princ(node *val, int *sol, int n, int count, int pos) {
+    int i;
+    if (pos >= n) {
+        // Print the current solution
+        for (i = 0; i < n; i++)
+            printf("%d ", sol[i]);
+        printf("\n");
+        return count + 1;
+    }
+    for (i = 0; i < val[pos].numChoice; i++) {
+        // Try all choices for the current position
+        sol[pos] = val[pos].choices[i];
+        count = mult_princ(val, sol, n, count, pos + 1);
+    }
+    return count;
+}
