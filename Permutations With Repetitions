@@ -1,0 +1,63 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function Prototypes
+int repetitionPermutation(int *val_dist, int *sol, int *mark, int n, int n_dist, int count, int pos);
+
+// Main Function
+int main(void) {
+    int *valDist, *mark, *sol;
+    int n = 4;  // Number of positions in the permutation
+    int nDist = 3;  // Number of distinct values
+    int totalCount;
+
+    valDist = (int *)malloc(nDist * sizeof(int));
+    mark = (int *)malloc(nDist * sizeof(int));
+    sol = (int *)malloc(n * sizeof(int));
+
+    if (valDist == NULL || mark == NULL || sol == NULL) {
+        fprintf(stderr, "Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    // Example values
+    for (int i = 0; i < nDist; i++) {
+        valDist[i] = i + 1;  // You can replace this with your own values
+        mark[i] = 2;  // Number of repetitions for each value
+    }
+
+    totalCount = repetitionPermutation(valDist, sol, mark, n, nDist, 0, 0);
+
+    printf("Total Permutations: %d\n", totalCount);
+
+    // Free allocated memory
+    free(valDist);
+    free(mark);
+    free(sol);
+
+    return EXIT_SUCCESS;
+}
+
+// Function Definitions
+int repetitionPermutation(int *val_dist, int *sol, int *mark, int n, int n_dist, int count, int pos) {
+    int i;
+
+    if (pos >= n) {
+        for (i = 0; i < n; i++) {
+            printf("%d ", sol[i]);
+        }
+        printf("\n");
+
+        return count + 1;
+    }
+
+    for (i = 0; i < n_dist; i++) {
+        if (mark[i] > 0) {
+            mark[i]--;
+            sol[pos] = val_dist[i];
+            count = repetitionPermutation(val_dist, sol, mark, n, n_dist, count, pos + 1);
+            mark[i]++;
+        }
+    }
+    return count;
+}
