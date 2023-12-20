@@ -16,13 +16,13 @@ with different numbers of choices.
 
 // Define a structure to represent a node in a combinatorial structure.
 
-typedef struct node {
+typedef struct node{
     // Number of selection in each set
     int numChoice;
 
     // the selection in each set
     int *choices;
-} node;
+}node;
 
 
 // Function Prototypes
@@ -45,29 +45,33 @@ int main() {
     // Allocate main array
 
     val = (struct node *) malloc (n * sizeof(node));
+    
+
+    // Assigning numChoice before allocating choices
+    val[0].numChoice = 2;
+    val[1].numChoice = 2;
+    val[2].numChoice = 2;
 
     // Allocating all possible choices
+
 
     for (int i = 0; i < n; i++){
         val[i].choices = malloc(val[i].numChoice * sizeof(int));
     }
 
+    val[0].choices[0] = 1;
+    val[0].choices[1] = 2;
+
+    val[1].choices[0] = 3;
+    val[1].choices[1] = 4;
+
+    val[2].choices[0] = 5;
+    val[2].choices[1] = 6;
 
     // Solution array
     sol = (int *) malloc(n * sizeof(int));
 
-    val[0].numChoice = 2;
-    val[0].choices[0] = 1;
-    val[0].choices[1] = 2;
-
-    val[1].numChoice = 2;
-    val[1].choices[0] = 3;
-    val[1].choices[1] = 4;
-
-    val[2].numChoice = 2;
-    val[2].choices[0] = 5;
-    val[2].choices[1] = 6;
-
+    
 
     // Call the multiplication principle function
     totalCount = mult_princ(val, sol, n, 0, 0);
