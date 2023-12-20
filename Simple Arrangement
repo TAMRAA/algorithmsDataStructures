@@ -1,0 +1,64 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function Prototypes
+int simpleArrangement(int *val, int *sol, int *mark, int n, int k, int count, int pos);
+
+// Main Function
+int main(void) {
+    int *val, *mark, *sol;
+    int count;
+
+    int n = 5; // You need to replace this with the actual value of n
+    int k = 3; // You need to replace this with the actual value of k
+
+    val = (int *) malloc (n * sizeof(int));
+    mark = (int *) malloc (n * sizeof(int));
+    sol = (int *) malloc (k * sizeof(int));
+
+    
+    // Initialize val array with some values (replace this with your actual values)
+    for (int i = 0; i < n; i++) {
+        val[i] = i + 1;
+    }
+
+    count = simpleArrangement(val, sol, mark, n, k, 0, 0);
+
+    printf("Total arrangements: %d\n", count);
+
+    free(val);
+    free(mark);
+    free(sol);
+
+    return EXIT_SUCCESS;
+}
+
+// Function declarations
+int simpleArrangement(int *val, int *sol, int *mark, int n, int k, int count, int pos) {
+
+    int i;
+    if (pos >= k) {
+        for (i = 0; i < k; i++)
+            printf("%d ", sol[i]);
+        printf("\n");
+
+        return count + 1;
+    }
+    for (i = 0; i < n; i++) {
+
+        // I can select this one
+        if (mark[i] == 0) {
+            // mark the current element as used
+            mark[i] = 1;
+            // Assign the current element to the current position in the arrangement
+            sol[pos] = val[i];
+
+            count = simpleArrangement(val, sol, mark, n, k, count, pos + 1);
+
+            // Unmark the current element for backtracking
+            mark[i] = 0;
+        }
+    }
+
+    return count;
+}
