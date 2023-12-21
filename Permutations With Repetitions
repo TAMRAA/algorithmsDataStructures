@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 // Function Prototypes
+int simplePermutation(int *val, int *mark, int *sol, int n, int count, int pos);
 int repetitionPermutation(int *val_dist, int *sol, int *mark, int n, int n_dist, int count, int pos);
 
 // Main Function
@@ -59,5 +60,30 @@ int repetitionPermutation(int *val_dist, int *sol, int *mark, int n, int n_dist,
             mark[i]++;
         }
     }
+    return count;
+}
+
+
+int simplePermutation(int *val, int *mark, int *sol, int n, int count, int pos) {
+    int i;
+
+    if (pos >= n) {
+        for (i = 0; i < n; i++) {
+            fprintf(stdout, "%d ", sol[i]);
+        }
+        fprintf(stdout, "\n");
+
+        return count + 1;
+    }
+
+    for (i = 0; i < n; i++) {
+        if (mark[i] == 0) {
+            mark[i] = 1;
+            sol[pos] = val[i];
+            count = simplePermutation(val, mark, sol, n, count, pos + 1);
+            mark[i] = 0;
+        }
+    }
+
     return count;
 }
