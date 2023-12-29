@@ -1,0 +1,352 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define N 20
+
+
+// structure for a binary tree Node
+typedef struct node{
+
+    // Data is a string
+    char key[N];
+
+    // Pointers to the left and right child nodes
+    struct node *l, *r;
+}node;
+
+
+// suitable for representing a node in a tree where each node
+// can have a variable number of children, up to N children.
+
+typedef struct node1 {
+    int key;
+
+    // An array of pointers to the children nodes (assuming N is defined somewhere)
+    struct node1 *children[N];
+}node1;
+
+// This structure allows for a flexible representation of a node in a tree where
+// each node can have a variable number of children, and the number of children
+// is specified by the degree field
+
+
+typedef struct node2 {
+    int key;
+    int degree;
+    struct node2 **children;
+}node2;
+
+
+// Functions Prototype
+node* newE(char *key, node *left, node *right);
+node *deleteNodeAndUpdate(char *val, node *root);
+node *max_delete_r(char *val, node *root);
+void inorder_r (struct node *root);
+node *insert_r (node *root, char *key);
+node *search_r (node *root, char *key);
+int getMenuChoice();
+
+// Main Function
+
+
+int main(void) {
+
+    // Declare the root of your tree
+
+    node *root = NULL;
+
+
+    while (1) {
+        int choice = getMenuChoice();
+        switch (choice) {
+            case 1: {
+                char key[N];
+                printf("Enter the key to insert: ");
+                scanf("%s", key);
+                root = insert_r(root, key);
+                printf("Node inserted successfully!\n");
+                break;
+            }
+            case 2: {
+                char key[N];
+                printf("Enter the key to delete: ");
+                scanf("%s", key);
+                root = deleteNodeAndUpdate(key, root);
+                printf("Node deleted successfully!\n");
+                break;
+            }
+            case 3: {
+                char key[N];
+                printf("Enter the key to search: ");
+                scanf("%s", key);
+                node *result = search_r(root, key);
+                if (result != NULL) {
+                    printf("Node found!\n");
+                } else {
+                    printf("Node not found.\n");
+                }
+                break;
+            }
+            case 4:
+                printf("In-order traversal: ");
+                inorder_r(root);
+                printf("\n");
+                break;
+            case 5:
+                printf("Exiting the program.\n");
+                exit(EXIT_SUCCESS);
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
+    }
+}
+
+
+// Function Declarations
+int getMenuChoice() {
+    int choice;
+
+    printf("\n===== Menu =====\n");
+    printf("1. Insert Node\n");
+    printf("2. Delete Node\n");
+    printf("3. Search Node\n");
+    printf("4. Display Tree (In-order)\n");
+    printf("5. Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+
+    return choice;
+}
+
+// VISITS FUNCTIONS
+
+// Pre-order
+void preorder_r (struct node *root){
+
+    if (root == NULL){
+        return;
+    }
+
+    printf("%s ", root->key );
+
+    preorder_r (root->l);
+
+    preorder_r (root->r);
+}
+
+// In-order
+void inorder_r (struct node *root){
+    if (root == NULL){
+        return;
+    }
+
+    inorder_r (root->l);
+
+    printf ("%s", root->key);
+
+    inorder_r (root->r);
+
+    return;
+}
+
+// Post-order
+void postorder_r (struct node *root){
+    if (root == NULL){
+        return;
+    }
+
+    postorder_r (root->l);
+
+    postorder_r (root->r);
+
+    printf ("%d", root->key);
+
+    return;
+}
+
+// Count nodes
+
+int count (struct node *root) {
+    int l, r;
+
+    if (root == NULL){
+        return 0;
+    }
+
+    // Count how many nodes on left and right sides
+    l = count (root->l);
+    r = count (root->r);
+
+    // Count start at zero
+    return ( (l+r) +1);
+}
+
+// Count Height of the tree
+
+int height (struct node *root) {
+    int u, v;
+
+    // height of an empty tree
+    if (root == NULL){
+        return 0;
+    }
+    // Recursively calculate the height of the left subtree
+    u = height (root->l);
+
+    // Recursively calculate the height of the right subtree
+    v = height (root->r);
+
+    // Compare the heights of the left and right subtrees
+    if (u > v){
+        return (u+1);
+    }
+    else{
+        return (v+1);
+    }
+
+}
+
+
+// Binary Search Tree ( BST )
+
+node *search_r (node *root, char *key) {
+
+    // Search Miss
+
+    if (root == NULL)
+        return (NULL);
+
+    // Recur Left
+    if (strcmp(key, root->key) < 0)
+        return (search_r (root->l, key));
+
+    // Recur right
+    if (strcmp(key,root->key) > 0)
+        return (search_r (root->r, key));
+
+    return root;
+}
+
+
+// Minimum of BT
+
+node *min_r (node *root) {
+
+    // Empty BST
+    if (root == NULL){
+        return NULL;
+    }
+
+    // Termination Condition
+    if (root->l == NULL){
+        return (root);
+    }
+
+    // Left Recursion
+    return min_r (root->l);
+
+}
+
+// Max of BT
+node *max_r (node *root) {
+
+    // Empty BST
+    if (root == NULL){
+        return (NULL);
+    }
+
+    // Termination Condition
+    if (root->r == NULL){
+        return (root);
+    }
+
+    // Right Recursion
+    return max_r (root->r);
+}
+
+
+// Create a Leaf Node
+node* newE(char *key, node *left, node *right) {
+    // Allocate memory for a new node
+    node *newNode = (struct node *) malloc (sizeof(node));
+
+    // Copy the key into the new node
+    strcpy(newNode->key, key);
+
+    // Set left and right child pointers
+    newNode->l = left;
+    newNode->r = right;
+
+    return newNode;
+}
+
+// LEAF INSERTION
+node *insert_r (node *root, char *key) {
+
+    // Termination condition ( Insert a new node )
+    if (root == NULL){
+         return (newE(key, NULL, NULL));
+    }
+
+    // Left Recursion
+    if (strcmp (key, root->key) < 0){
+        root->l = insert_r (root->l, key);
+    }
+
+    // Right Recursion
+    else{
+        root->r = insert_r (root->r, key);
+    }
+
+    // Assign new pointer onto parent on the way back
+    return root;
+
+    // Function call (  root = insert_r(root, key);   )
+}
+
+
+// Node Extraction
+
+node *deleteNodeAndUpdate(char *val, node *root) {
+    node *tmp;
+
+    if (root->r == NULL) {
+
+        // Rule 1 or 2: Right child is NULL
+        strcpy(val, root->key);
+        tmp = root->l;
+        free(root);
+        return tmp;
+    }
+
+    if (root->l == NULL) {
+        // Rule 1 or 2: Left child is NULL
+        strcpy(val, root->key);
+        tmp = root->r;
+        free(root);
+        return tmp;
+    }
+
+    // Rule 3: Both children are present
+    root->l = max_delete_r(val, root->l);
+    strcpy(val, root->key);;
+
+    return root;
+}
+
+node *max_delete_r(char *val, node *root) {
+    node *tmp;
+
+    if (root->r == NULL) {
+        // Maximum value found
+        strcpy(val, root->key);
+        tmp = root->l;
+        free(root);
+        return tmp;
+    }
+
+    // Continue searching for the maximum value
+    root->r = max_delete_r(val, root->r);
+
+    return root;
+}
