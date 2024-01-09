@@ -1,0 +1,89 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+typedef struct node_t {
+    int key;
+    int degree;
+    struct node_t **children;
+} node_t;
+
+
+// Function prototypes
+
+void printTree(node_t* root, int level);
+node_t *createNode(int key, int degree);
+node_t *buildTree(int height);
+
+// Main Function
+
+int main(void) {
+
+    // Seed the random number generator
+    srand(time(NULL));
+
+    // Build a tree with a height of 3
+    node_t *tree = buildTree(3);
+
+    // Print the tree
+    printTree(tree, 0);
+
+    // Your tree with 10 nodes and height 3 is ready
+    // You can add additional code to display or manipulate the tree as needed
+
+    return EXIT_SUCCESS;
+}
+
+
+
+
+
+
+// Function to build a tree with a given height recursively
+node_t *buildTree(int height) {
+    if (height <= 0) {
+        return NULL;
+    }
+
+    node_t *root = createNode(rand() % 100, 2); // Random key, degree 2
+
+    for (int i = 0; i < root->degree; ++i) {
+        root->children[i] = buildTree(height - 1);
+    }
+
+    return root;
+}
+
+
+// Function to create a new node with a given key and degree
+node_t *createNode(int key, int degree) {
+    node_t* newNode = (struct node_t *) malloc (sizeof(node_t));
+    newNode->key = key;
+    newNode->degree = degree;
+    newNode->children = (node_t **) malloc (degree * sizeof(node_t *));
+
+    for (int i = 0; i < degree; ++i) {
+        newNode->children[i] = NULL;
+    }
+
+    return newNode;
+}
+
+
+// Function to print the tree
+void printTree(node_t *root, int level) {
+    if (root == NULL) {
+        return;
+    }
+
+    // Print the current node
+    printf("Level %d: Node with key %d\n", level, root->key);
+
+    // Recursively print the children
+    for (int i = 0; i < root->degree; ++i) {
+        if (root->children[i] != NULL) {
+            printTree(root->children[i], level + 1);
+        }
+    }
+}
+
