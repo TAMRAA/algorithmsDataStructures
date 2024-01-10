@@ -1,0 +1,157 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <limits.h> // Include for INT_MAX constant
+#define maxLine 100
+
+// White 0, Grey 1, Black 2
+enum { WHITE, GREY, BLACK };
+
+
+// GRAPH DATA STRUCTURE
+
+typedef struct vertex_s {
+    int id;
+    int color;
+    int distance;
+    int discoveryTime;
+    int endTime;
+    int predecessor;
+    int strongConnect;
+
+    // Row of adjacency matrix
+    int *rowAdj;
+
+} vertex_s;
+
+typedef struct graph_t {
+    vertex_s *g;
+
+    // Num of vertices
+    int nv;
+
+} graph_t;
+
+
+
+// Function prototypes
+graph_t *graphLoad(char *filename);
+void graphInit (graph_t *g);
+
+
+
+// Main Function
+int main(void) {
+
+
+    return EXIT_SUCCESS;
+}
+
+// Function definitions
+
+
+graph_t *graphLoad(char *filename) {
+    graph_t *g;
+    char line[maxLine];
+    int i, j, weight, dir;
+    FILE *fp;
+
+    // Allocate memory for the graph_t structure
+    g = (graph_t *)malloc(sizeof(graph_t));
+    if (g == NULL) {
+        fprintf(stderr, "Memory allocation failed");
+        return NULL;
+    }
+
+    // Open the file for reading
+    fp = fopen(filename, "r");
+    if (fp == NULL) {
+        fprintf(stderr, "Error opening file");
+        return NULL;
+    }
+
+    // Read the first line to get the number of vertices and the direction indicator
+    fgets(line, maxLine, fp);
+
+    // If two integers are not successfully read, assume the first integer as the number of vertices (nv)
+
+    // and set dir to 1 (indicating a directed graph).
+    if (sscanf(line, "%d%d", &g->nv, &dir) != 2) {
+        sscanf(line, "%d", &g->nv);
+        dir = 1;
+    }
+
+    // Allocate memory for the array of vertices
+    g->g = (vertex_s *)malloc(g->nv * sizeof(vertex_s));
+    if (g->g == NULL) {
+        fprintf(stderr, "Memory allocation failed");
+        return NULL;
+    }
+
+    // Loop through each vertex and initialize its properties
+    for (i = 0; i < g->nv; i++) {
+
+        g->g[i].id = i;
+        g->g[i].color = WHITE;
+        g->g[i].distance = INT_MAX;
+        g->g[i].predecessor = g->g[i].strongConnect = -1;
+        g->g[i].discoveryTime = -1;
+        g->g[i].endTime = -1;
+
+        // Allocate memory for the rowAdj array
+        g->g[i].rowAdj = (int *)malloc(g->nv * sizeof(int));
+        if (g->g[i].rowAdj == NULL) {
+            fprintf(stderr, "Memory allocation failed");
+            return NULL;
+        }
+        
+        // Initialize the rowAdj array
+        for (j = 0; j < g->nv; j++) {
+            g->g[i].rowAdj[j] = 0;
+        }
+    }
+
+    // Read the remaining lines to assign the adjacency matrix
+    while (fgets(line, maxLine, fp) != NULL) {
+        if (sscanf(line, "%d%d%d", &i, &j, &weight) != 3) {
+            sscanf(line, "%d%d", &i, &j);
+            weight = 1;
+        }
+
+        // Assign the rowAdj array with weights
+        g->g[i].rowAdj[j] = weight;
+
+        // If the graph is undirected, also assign the corresponding entry
+        if (dir == 0) {
+            g->g[j].rowAdj[i] = weight;
+        }
+    }
+
+    // Close the file
+    fclose(fp);
+    return g;
+}
+
+//
+int graphFind (graph_t *g, int id){
+    int i;
+
+    for (i=0; i<g->nv; i++){
+        if (g->g[i].id == id) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+void graphDispose (graph_t *g) {
+    int i;
+
+    for (i=0; i<g->nv; i++) {
+        free(g->g[i].rowAdj);
+    }
+    free(g->g);
+    free(g);
+
+}
