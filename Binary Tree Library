@@ -1,0 +1,224 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+
+typedef struct node{
+    int data;
+    struct node *l , *r;
+
+}node;
+
+// Function prototypes
+void inOrder(struct node *root);
+int count(struct node *root);
+int height(struct node *root);
+node* createNode(int value);
+node* insert(node* root, int value);
+node *search_r (struct node *root, int key);
+node *delete_r (node *root, int key);
+node *max_delete_r (int *val, node *root);
+
+
+
+// Main Function
+
+int main(void) {
+
+    node *root = NULL;
+    node *result = NULL;
+    int key = 7021;
+    root = insert(root, 50);
+    insert(root, 30);
+    insert(root, 20);
+    insert(root, 40);
+    insert(root, 70);
+    insert(root, 60);
+    insert(root, 80);
+
+
+    return EXIT_SUCCESS;
+}
+
+// Function declarations
+
+node* createNode(int value) {
+    node* newNode = (struct node *) malloc(sizeof(node));
+
+    if(newNode == NULL){
+        fprintf(stderr,"Memory allocation failed");
+        return NULL;
+
+    }
+
+    // Allocate new node
+    newNode->data = value;
+    newNode->l = NULL;
+    newNode->r = NULL;
+
+    return newNode;
+}
+
+// Function to insert a value into the binary search tree leaves
+node* insert(node* root, int value) {
+
+    // If the tree is empty, create a new node and return it as the root
+    if (root == NULL) {
+        return createNode(value);
+    }
+
+    // If the value is less than the current node's data, insert into the left subtree
+    if (value < root->data) {
+        root->l = insert(root->l, value);
+    }
+        // If the value is greater than the current node's data, insert into the right subtree
+    else if (value > root->data) {
+        root->r = insert(root->r, value);
+    }
+
+    // If the value is equal to the current node's data, do not insert (assuming no duplicates)
+
+    return root;
+}
+
+
+void inOrder(struct node *root){
+    if (root == NULL){
+        return;
+    }
+
+    inOrder(root->l);
+    fprintf(stdout,"%d ",root->data);
+    inOrder(root->r);
+}
+
+int count(struct node *root){
+    int l, r;
+
+    if(root == NULL){
+        return 0;
+    }
+
+    l = count(root->l);
+    r = count(root->r);
+
+    return (l + r + 1);
+
+}
+
+int height(struct node *root){
+    int u, v;
+
+    if(root == NULL){
+        return -1;
+    }
+
+    u = height(root->l);
+    v = height(root->r);
+
+    if(u > v){
+        return u + 1;
+    }else{
+        return v + 1;
+    }
+}
+
+
+// Search BT
+node *search_r (struct node *root, int key){
+    if(root == NULL){
+        return NULL;
+    }
+    if(key < root -> data){
+        return (search_r(root->l, key));
+    }
+    if(key > root -> data){
+        return (search_r(root->r, key));
+    }
+
+    return root;
+}
+
+node *minimum(struct node *root){
+    if (root == NULL){
+        return NULL;
+    }
+    if(root->l == NULL){
+        return root;
+    }
+
+    return minimum(root->l);
+
+}
+
+
+node *maximum(struct node *root){
+    if(root == NULL){
+        return NULL;
+    }
+    if(root->r == NULL){
+        return root;
+    }
+
+    return maximum(root->r);
+}
+
+
+// Delete Node Function
+node *delete_r (node *root, int key) {
+    node *p;
+    int val;
+
+    if (root == NULL){
+        return NULL;
+    }
+
+    // Recur left
+    if (key < root->data) {
+        root->l = delete_r(root->l, key);
+    }
+
+    // Recur right
+    else if (key > root->data) {
+        root->r = delete_r(root->r, key);
+    }
+
+    // Node found
+    else {
+
+        p = root;
+
+        // Rule 1 or 2
+        if (root->r == NULL) {
+            root = root->l;
+            free(p);
+        } else if (root->l == NULL) {
+            root = root->r;
+            free(p);
+        } else {
+
+            // Rule 3, node with 2 children
+            // ( Find max between subTrees )
+            root->l = max_delete_r(&val, root->l);
+            root->data = val;
+        }
+    }
+    return root;
+}
+
+// Find Max between subtrees
+node *max_delete_r(int *val, node *root) {
+    node *tmp = root;
+
+    // Free the node and return pointer to left child
+    if (root->r == NULL) {
+        *val = root->data;
+        root = root->l;
+        free(tmp);
+        return root;
+    }
+
+    // Recur until there is no right child
+    root->r = max_delete_r(val, root->r);
+    return root;
+}
